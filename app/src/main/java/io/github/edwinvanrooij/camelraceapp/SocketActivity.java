@@ -11,12 +11,7 @@ import android.widget.Toast;
 import org.parceler.Parcels;
 
 import butterknife.ButterKnife;
-import de.tavendo.autobahn.WebSocketConnection;
-import de.tavendo.autobahn.WebSocketHandler;
 
-import static com.funcrate.funcrateplanningpoker.Config.BACKEND_IP;
-import static com.funcrate.funcrateplanningpoker.Config.BACKEND_PORT;
-import static com.funcrate.funcrateplanningpoker.Constants.KEY_URL;
 import static io.github.edwinvanrooij.camelraceapp.Constants.KEY_URL;
 
 public class SocketActivity extends AppCompatActivity {
@@ -37,7 +32,7 @@ public class SocketActivity extends AppCompatActivity {
 
         setFragment(EnterNameFragment.class, false);
 
-        connectWebSocket();
+//        connectWebSocket();
     }
 
     private void onMessageReceived(String s) {

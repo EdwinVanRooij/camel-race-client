@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CamelRaceApp.iml" filepath="$PROJECT_DIR$/CamelRaceApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/camel-race-client.iml" filepath="$PROJECT_DIR$/camel-race-client.iml" />
     </modules>
   </component>
 </project>
