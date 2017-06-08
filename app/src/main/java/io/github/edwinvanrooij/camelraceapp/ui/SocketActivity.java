@@ -12,11 +12,25 @@ import org.parceler.Parcels;
 import butterknife.ButterKnife;
 import io.github.edwinvanrooij.camelraceapp.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+import io.github.edwinvanrooij.camelraceapp.Config;
+import io.github.edwinvanrooij.camelraceapp.R;
+import io.github.edwinvanrooij.camelraceapp.ui.SocketActivity;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
+import okio.ByteString;
 import static io.github.edwinvanrooij.camelraceapp.Constants.KEY_URL;
 
 public class SocketActivity extends AppCompatActivity {
 
-    private String url;
+    private OkHttpClient client;
+    private String gameId;
     private static final String TAG = "SocketActivity";
 //    private final WebSocketConnection mConnection = new WebSocketConnection();
 
@@ -26,96 +40,22 @@ public class SocketActivity extends AppCompatActivity {
         setContentView(R.layout.activity_socket);
         ButterKnife.bind(this);
 
+        client = new OkHttpClient();
         // Get the url from previous activity
-        url = Parcels.unwrap(getIntent().getParcelableExtra(KEY_URL));
-        Toast.makeText(this, String.format("URL is: %s", url), Toast.LENGTH_SHORT).show();
+        gameId = Parcels.unwrap(getIntent().getParcelableExtra(KEY_URL));
+        Toast.makeText(this, String.format("URL is: %s", gameId), Toast.LENGTH_SHORT).show();
 
         setFragment(EnterNameFragment.class, false);
 
-//        connectWebSocket();
+        start();
+    }
+    private void start() {
+        Request request = new Request.Builder().url(Config.BACKEND_CONNECTION_URL).build();
+        EchoWebSocketListener listener = new EchoWebSocketListener();
+        WebSocket ws = client.newWebSocket(request, listener);
+        client.dispatcher().executorService().shutdown();
     }
 
-    private void onMessageReceived(String s) {
-//        System.out.println(String.format("Received: %s", s));
-//
-//        Event e = Event.deserialize(s);
-//
-//        switch (e.getName()) {
-//            case "gameStarted":
-//                setFragment(WaitFragment.class, false);
-//                break;
-//
-//            case "nextRound":
-//                setFragment(CardPickFragment.class, false);
-//                break;
-//
-//            case "allVoted":
-//                setFragment(Wait2Fragment.class, false);
-//                break;
-//
-//            default:
-//                System.out.println("Could not determine name");
-//        }
-    }
-
-//    public void sendMessageThroughSocket(String string) {
-//        runOnUiThread(() -> {
-//            mConnection.sendTextMessage(string);
-//        });
-//    }
-//
-//    /**
-//     * All of the socket communication is received and finally sent in this method, callbacks are registerd here
-//     * This code points to other methods based on the messages received
-//     */
-//    private void connectWebSocket() {
-//        String wsuri = String.format("ws://%s:%s/client", BACKEND_IP, BACKEND_PORT);
-//
-//        try {
-//            mConnection.connect(wsuri, new WebSocketHandler() {
-//
-//                @Override
-//                public void onOpen() {
-//                    Log.d(TAG, "Status: Connected to " + wsuri);
-//
-//                    sendMessageThroughSocket(String.format("gameId;\"%s\"", url));
-//                }
-//
-//                @Override
-//                public void onTextMessage(String payload) {
-//                    onMessageReceived(payload);
-//                }
-//
-//                @Override
-//                public void onClose(int code, String reason) {
-//                    Log.d(TAG, String.format("Connection lost, reason: %s", reason));
-//                }
-//            });
-//        } catch (de.tavendo.autobahn.WebSocketException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    /**
-//     * Called when host is done with entering required information (entering user stories)
-//     */
-//    private void onHostIsDone() {
-//        setFragment(CardPickFragment.class, false);
-//    }
-//
-//    /**
-//     * Called when all players are ready to start the game
-//     */
-//    private void onEveryoneReady() {
-//        setFragment(WaitFragment.class, false);
-//    }
-
-    /**
-     * Call this to change the fragment
-     *
-     * @param fragmentClass
-     * @param addToStack
-     */
     @SuppressWarnings("JavaDoc")
     public void setFragment(Class fragmentClass, boolean addToStack) {
         try {
@@ -133,6 +73,38 @@ public class SocketActivity extends AppCompatActivity {
             ft.replace(R.id.flContent, fragment).commit();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    private final class EchoWebSocketListener extends WebSocketListener {
+        private static final int NORMAL_CLOSURE_STATUS = 1000;
+
+        @Override
+        public void onOpen(WebSocket webSocket, Response response) {
+            webSocket.send("Hello, it's SSaurel !");
+            webSocket.send("What's up ?");
+            webSocket.send(ByteString.decodeHex("deadbeef"));
+            webSocket.close(NORMAL_CLOSURE_STATUS, "Goodbye !");
+        }
+
+        @Override
+        public void onMessage(WebSocket webSocket, String text) {
+            System.out.println("Receiving : " + text);
+        }
+
+        @Override
+        public void onMessage(WebSocket webSocket, ByteString bytes) {
+            System.out.println("Receiving bytes : " + bytes.hex());
+        }
+
+        @Override
+        public void onClosing(WebSocket webSocket, int code, String reason) {
+            webSocket.close(NORMAL_CLOSURE_STATUS, null);
+            System.out.println("Closing : " + code + " / " + reason);
+        }
+
+        @Override
+        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+            System.out.println("Error : " + t.getMessage());
         }
     }
 }

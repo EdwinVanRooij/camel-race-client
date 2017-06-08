@@ -6,12 +6,10 @@ package io.github.edwinvanrooij.camelraceapp;
  */
 
 public class Config {
-    //    192.168.2.5:8080/host
-//    public final static String BACKEND_IP = "192.168.2.5";
-//    public final static String BACKEND_IP = "145.93.57.140";
-//    public final static String BACKEND_IP = "192.168.122.1";
-//    public final static String BACKEND_IP = "192.168.2.101";
-    public final static String BACKEND_IP = "192.168.2.5";
-//    public final static String BACKEND_IP = "";
-    public final static int BACKEND_PORT = 8080;
+
+    private final static String BACKEND_IP = "192.168.5.115";
+    private final static int BACKEND_PORT = 8082;
+    private final static String BACKEND_PATH = "client";
+
+    public final static String BACKEND_CONNECTION_URL = String.format("ws://%s:%s/%s", BACKEND_IP, BACKEND_PORT, BACKEND_PATH);
 }
