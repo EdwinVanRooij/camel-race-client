@@ -12,27 +12,20 @@ import org.parceler.Parcels;
 import butterknife.ButterKnife;
 import io.github.edwinvanrooij.camelraceapp.R;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
 import io.github.edwinvanrooij.camelraceapp.Config;
-import io.github.edwinvanrooij.camelraceapp.R;
-import io.github.edwinvanrooij.camelraceapp.ui.SocketActivity;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
-import static io.github.edwinvanrooij.camelraceapp.Constants.KEY_URL;
+
+import static io.github.edwinvanrooij.camelraceapp.Config.GAME_ID;
 
 public class SocketActivity extends AppCompatActivity {
 
     private OkHttpClient client;
     private String gameId;
-    private static final String TAG = "SocketActivity";
-//    private final WebSocketConnection mConnection = new WebSocketConnection();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +34,15 @@ public class SocketActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         client = new OkHttpClient();
-        // Get the url from previous activity
-        gameId = Parcels.unwrap(getIntent().getParcelableExtra(KEY_URL));
-        Toast.makeText(this, String.format("URL is: %s", gameId), Toast.LENGTH_SHORT).show();
+
+        gameId = Parcels.unwrap(getIntent().getParcelableExtra(GAME_ID));
+        Toast.makeText(this, String.format("Game ID: %s", gameId), Toast.LENGTH_SHORT).show();
 
         setFragment(EnterNameFragment.class, false);
 
-        start();
+        connectWebSocket();
     }
-    private void start() {
+    public void connectWebSocket() {
         Request request = new Request.Builder().url(Config.BACKEND_CONNECTION_URL).build();
         EchoWebSocketListener listener = new EchoWebSocketListener();
         WebSocket ws = client.newWebSocket(request, listener);
@@ -70,20 +63,21 @@ public class SocketActivity extends AppCompatActivity {
                 ft.addToBackStack(null);
             }
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.replace(R.id.flContent, fragment).commit();
+            ft.replace(R.id.flContent, fragment, fragmentClass.getSimpleName()).commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     private final class EchoWebSocketListener extends WebSocketListener {
         private static final int NORMAL_CLOSURE_STATUS = 1000;
-
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
-            webSocket.send("Hello, it's SSaurel !");
-            webSocket.send("What's up ?");
-            webSocket.send(ByteString.decodeHex("deadbeef"));
-            webSocket.close(NORMAL_CLOSURE_STATUS, "Goodbye !");
+            EnterNameFragment f = (EnterNameFragment) getSupportFragmentManager().findFragmentByTag(EnterNameFragment.class.getSimpleName());
+            if (f != null) {
+                f.onConnected();
+            }
+            System.out.println("Open connection on client.");
         }
 
         @Override
@@ -100,6 +94,11 @@ public class SocketActivity extends AppCompatActivity {
         public void onClosing(WebSocket webSocket, int code, String reason) {
             webSocket.close(NORMAL_CLOSURE_STATUS, null);
             System.out.println("Closing : " + code + " / " + reason);
+
+            EnterNameFragment f = (EnterNameFragment) getSupportFragmentManager().findFragmentByTag(EnterNameFragment.class.getSimpleName());
+            if (f != null) {
+                f.onDisconnected();
+            }
         }
 
         @Override

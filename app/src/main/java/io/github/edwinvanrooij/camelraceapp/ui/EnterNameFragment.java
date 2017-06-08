@@ -1,28 +1,19 @@
 package io.github.edwinvanrooij.camelraceapp.ui;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
-import io.github.edwinvanrooij.camelraceapp.Config;
 import io.github.edwinvanrooij.camelraceapp.R;
-import io.github.edwinvanrooij.camelraceapp.ui.SocketActivity;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
-import okio.ByteString;
 
 
 /**
@@ -32,6 +23,9 @@ public class EnterNameFragment extends SocketFragment {
 
     @BindView(R.id.etUsername)
     EditText etUsername;
+
+    @BindView(R.id.tvTitleConnect)
+    TextView tvTitleConnect;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,6 +37,30 @@ public class EnterNameFragment extends SocketFragment {
         String username = etUsername.getText().toString();
 
         Toast.makeText(getContext(), String.format("Username is: %s", username), Toast.LENGTH_SHORT).show();
+    }
+
+    public void onConnected() {
+        activity.runOnUiThread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        tvTitleConnect.setText(R.string.connected);
+                        tvTitleConnect.setTextColor(Color.GREEN);
+                    }
+                }
+        );
+    }
+
+    public void onDisconnected() {
+        activity.runOnUiThread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        tvTitleConnect.setText(R.string.disconnected);
+                        tvTitleConnect.setTextColor(Color.RED);
+                    }
+                }
+        );
     }
 
 }

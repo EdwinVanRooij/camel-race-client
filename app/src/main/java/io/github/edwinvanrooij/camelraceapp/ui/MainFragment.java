@@ -15,7 +15,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import io.github.edwinvanrooij.camelraceapp.R;
 
-import static io.github.edwinvanrooij.camelraceapp.Constants.KEY_URL;
+import static io.github.edwinvanrooij.camelraceapp.Config.GAME_ID;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,7 +25,7 @@ public class MainFragment extends BaseFragment {
     @BindView(R.id.etGameId)
     EditText etGameId;
 
-    private String lobby_url;
+    private String gameId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,15 +34,14 @@ public class MainFragment extends BaseFragment {
 
     @OnClick(R.id.btnJoin)
     public void onButtonJoinClick() {
-        System.out.println("Clicked button join");
-        lobby_url = etGameId.getText().toString();
+        gameId = etGameId.getText().toString();
         startSocketActivity();
     }
 
     private void startSocketActivity() {
         Intent intent = new Intent(getActivity(), SocketActivity.class);
 
-        intent.putExtra(KEY_URL, Parcels.wrap(lobby_url));
+        intent.putExtra(GAME_ID, Parcels.wrap(gameId));
 
         startActivity(intent);
     }

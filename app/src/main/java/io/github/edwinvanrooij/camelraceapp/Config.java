@@ -6,8 +6,11 @@ package io.github.edwinvanrooij.camelraceapp;
  */
 
 public class Config {
+    public static final String GAME_ID = "url";
 
-    private final static String BACKEND_IP = "192.168.5.115";
+//    private final static String BACKEND_IP = "192.168.5.115";
+    private final static String BACKEND_IP = "172.17.0.1";
+
     private final static int BACKEND_PORT = 8082;
     private final static String BACKEND_PATH = "client";
 

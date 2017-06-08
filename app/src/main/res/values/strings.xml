@@ -45,4 +45,8 @@
     <string name="wait2_title">Wait till next round...</string>
     <string name="wait2_description">The host is now busy filling in information...</string>
     <string name="title_game_id">Game ID</string>
+    <string name="button_connect">Connect</string>
+    <string name="title_connection">Not connected</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="connected">Connected!</string>
 </resources>
