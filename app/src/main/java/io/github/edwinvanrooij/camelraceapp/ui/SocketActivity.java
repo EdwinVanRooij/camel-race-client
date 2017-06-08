@@ -1,16 +1,16 @@
-package io.github.edwinvanrooij.camelraceapp;
+package io.github.edwinvanrooij.camelraceapp.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.parceler.Parcels;
 
 import butterknife.ButterKnife;
+import io.github.edwinvanrooij.camelraceapp.R;
 
 import static io.github.edwinvanrooij.camelraceapp.Constants.KEY_URL;
 

@@ -9,32 +9,11 @@
         android:layout_height="wrap_content"
         android:focusable="true"
         android:focusableInTouchMode="true">
-        <!-- :nextFocusUp and :nextFocusLeft have been set to the id of this component
-            to prevent the dummy from receiving focus again -->
-        <AutoCompleteTextView
-            android:id="@+id/autotext"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:nextFocusLeft="@id/autotext"
-            android:nextFocusUp="@id/autotext"
-            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:paddingTop="6dp"
-                android:text="@string/fragment_main_title"
-                android:textSize="40sp"
-                android:textStyle="bold" />
-
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,34 +25,25 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/manualTitle"
+                        android:id="@+id/etGameIdTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/spacing_large"
                         android:layout_marginRight="@dimen/spacing_large"
                         android:layout_marginTop="@dimen/spacing_large"
-                        android:text="@string/fragment_main_manual_title"
+                        android:labelFor="@+id/etGameId"
+                        android:text="@string/title_game_id"
                         android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
-                    <TextView
-                        android:id="@+id/manualDescription"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/spacing_large"
-                        android:layout_marginRight="@dimen/spacing_large"
-                        android:text="@string/fragment_main_manual_desc"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
                     <EditText
-                        android:id="@+id/etManualURL"
+                        android:id="@+id/etGameId"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/spacing_large"
                         android:layout_marginRight="@dimen/spacing_large"
-                        android:hint="@string/hint_url"
                         android:inputType="textPersonName"
-                        android:nextFocusLeft="@id/etManualURL"
-                        android:nextFocusUp="@id/etManualURL" />
+                        android:nextFocusLeft="@id/etGameId"
+                        android:nextFocusUp="@id/etGameId" />
 
                     <Button
                         android:id="@+id/btnJoin"

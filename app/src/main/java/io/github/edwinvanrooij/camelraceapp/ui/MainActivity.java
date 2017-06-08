@@ -1,7 +1,4 @@
-package io.github.edwinvanrooij.camelraceapp;
-
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+package io.github.edwinvanrooij.camelraceapp.ui;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -13,10 +10,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import io.github.edwinvanrooij.camelraceapp.R;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -31,7 +28,6 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
@@ -44,6 +40,9 @@ public class MainActivity extends AppCompatActivity
 
         setFragment(MainFragment.class);
     }
+
+
+
 
     @Override
     public void onBackPressed() {

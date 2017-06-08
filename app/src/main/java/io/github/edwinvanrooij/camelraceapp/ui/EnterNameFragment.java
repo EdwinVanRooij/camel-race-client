@@ -1,4 +1,4 @@
-package io.github.edwinvanrooij.camelraceapp;
+package io.github.edwinvanrooij.camelraceapp.ui;
 
 
 import android.os.Bundle;
@@ -14,6 +14,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.github.edwinvanrooij.camelraceapp.R;
+import io.github.edwinvanrooij.camelraceapp.ui.SocketActivity;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -25,35 +27,24 @@ import okio.ByteString;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EnterNameFragment extends Fragment {
+public class EnterNameFragment extends BaseFragment {
 
     @BindView(R.id.etUsername)
     EditText etUsername;
 
-    public EnterNameFragment() {
-        // Required empty public constructor
-    }
-
-    private Unbinder unbinder;
-
-    @Override
-    public void onDestroyView() {
-        unbinder.unbind();
-        super.onDestroyView();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_enter_name, container, false);
-
-        unbinder = ButterKnife.bind(this, view);
-        client = new OkHttpClient();
-
-        return view;
-    }
-
     private OkHttpClient client;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_enter_name, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        client = new OkHttpClient();
+    }
 
     private void start() {
         Request request = new Request.Builder().url("ws://192.168.5.115:8082/client").build();
@@ -79,12 +70,6 @@ public class EnterNameFragment extends Fragment {
         String username = etUsername.getText().toString();
 
         Toast.makeText(getContext(), String.format("Username is: %s", username), Toast.LENGTH_SHORT).show();
-
-        SocketActivity activity = (SocketActivity) getActivity();
-
-//        activity.sendMessageThroughSocket(String.format("join;\"%s\"", username));
-
-//        activity.setFragment(ReadyFragment.class, false);
     }
 
     private final class EchoWebSocketListener extends WebSocketListener {
