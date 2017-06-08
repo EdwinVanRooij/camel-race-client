@@ -12,14 +12,18 @@ import android.widget.Toast;
 
 import org.parceler.Parcels;
 
+import java.io.IOException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.edwinvanrooij.camelraceapp.R;
 
 import io.github.edwinvanrooij.camelraceapp.Config;
-import io.github.edwinvanrooij.camelraceapp.domain.Event;
-import io.github.edwinvanrooij.camelraceapp.domain.Player;
-import io.github.edwinvanrooij.camelraceapp.domain.PlayerJoinRequest;
+import io.github.edwinvanrooij.camelraceapp.Util;
+import io.github.edwinvanrooij.camelraceapp.domain.events.Event;
+import io.github.edwinvanrooij.camelraceapp.domain.events.Player;
+import io.github.edwinvanrooij.camelraceapp.domain.events.PlayerJoinRequest;
+import io.github.edwinvanrooij.camelraceapp.domain.events.PlayerNewBid;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -116,10 +120,8 @@ public class SocketActivity extends AppCompatActivity {
 
     public void onSubmitUsername(String username) {
         Player player = new Player(username);
-        this.player = player;
         PlayerJoinRequest playerJoinRequest = new PlayerJoinRequest(gameId, player);
-        Event e = new Event(Event.PLAYER_JOINED, playerJoinRequest);
-        ws.send(Util.objectToJson(e));
+        sendMessage(Event.KEY_PLAYER_JOIN, playerJoinRequest, ws);
     }
 
     private final class EchoWebSocketListener extends WebSocketListener {
@@ -134,6 +136,7 @@ public class SocketActivity extends AppCompatActivity {
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             System.out.println("Receiving : " + text);
+            handleMessage(text, webSocket);
         }
 
         @Override
@@ -181,4 +184,29 @@ public class SocketActivity extends AppCompatActivity {
         );
     }
 
+    public void handleMessage(String message, WebSocket socket) {
+        try {
+            Event event = Util.jsonToEvent(message);
+
+            switch (event.getEventType()) {
+
+                case Event.KEY_PLAYER_JOINED: {
+                    Player player = (Player) event.getValue();
+                    this.player = player;
+                    System.out.println(String.format("Got %s back!", player));
+                    break;
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendMessage(String eventType, Object value, WebSocket ws) {
+        Event event = new Event(eventType, value);
+        String message = Util.objectToJson(event);
+        ws.send(message);
+        System.out.println(String.format("Sending: %s", message));
+    }
 }

@@ -1,8 +1,4 @@
-package io.github.edwinvanrooij.camelraceapp.domain;
-
-/**
- * Created by eddy on 6/8/17.
- */
+package io.github.edwinvanrooij.camelraceapp.domain.events;
 
 /**
  * Created by eddy
@@ -24,7 +20,6 @@ public class Player {
         this.name = name;
     }
 
-
     public Player(int id, String name) {
         this.id = id;
         this.name = name;
@@ -32,5 +27,12 @@ public class Player {
     public Player(String name) {
         this.name = name;
     }
-}
 
+    @Override
+    public String toString() {
+        return "Player{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+}

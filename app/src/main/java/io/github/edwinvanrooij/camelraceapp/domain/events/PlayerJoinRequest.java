@@ -1,5 +1,4 @@
-package io.github.edwinvanrooij.camelraceapp.domain;
-
+package io.github.edwinvanrooij.camelraceapp.domain.events;
 
 /**
  * Created by eddy
@@ -8,6 +7,14 @@ package io.github.edwinvanrooij.camelraceapp.domain;
 public class PlayerJoinRequest {
     private String gameId;
     private Player player;
+
+    @Override
+    public String toString() {
+        return "PlayerJoinRequest{" +
+                "gameId='" + gameId + '\'' +
+                ", player=" + player +
+                '}';
+    }
 
     public String getGameId() {
         return gameId;
