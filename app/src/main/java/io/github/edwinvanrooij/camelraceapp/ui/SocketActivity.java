@@ -13,6 +13,9 @@ import butterknife.ButterKnife;
 import io.github.edwinvanrooij.camelraceapp.R;
 
 import io.github.edwinvanrooij.camelraceapp.Config;
+import io.github.edwinvanrooij.camelraceapp.domain.Event;
+import io.github.edwinvanrooij.camelraceapp.domain.Player;
+import io.github.edwinvanrooij.camelraceapp.domain.PlayerJoinRequest;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -26,6 +29,7 @@ public class SocketActivity extends AppCompatActivity {
 
     private OkHttpClient client;
     private String gameId;
+    private WebSocket ws;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +49,7 @@ public class SocketActivity extends AppCompatActivity {
     public void connectWebSocket() {
         Request request = new Request.Builder().url(Config.BACKEND_CONNECTION_URL).build();
         EchoWebSocketListener listener = new EchoWebSocketListener();
-        WebSocket ws = client.newWebSocket(request, listener);
+         ws = client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
     }
 
@@ -67,6 +71,13 @@ public class SocketActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void onSubmitUsername(String username) {
+        Player player = new Player(username);
+        PlayerJoinRequest playerJoinRequest = new PlayerJoinRequest(gameId, player);
+        Event e = new Event(Event.PLAYER_JOINED, playerJoinRequest);
+        ws.send(Util.objectToJson(e));
     }
 
     private final class EchoWebSocketListener extends WebSocketListener {

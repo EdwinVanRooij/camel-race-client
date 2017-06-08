@@ -37,6 +37,7 @@ public class EnterNameFragment extends SocketFragment {
         String username = etUsername.getText().toString();
 
         Toast.makeText(getContext(), String.format("Username is: %s", username), Toast.LENGTH_SHORT).show();
+        activity.onSubmitUsername(username);
     }
 
     public void onConnected() {
