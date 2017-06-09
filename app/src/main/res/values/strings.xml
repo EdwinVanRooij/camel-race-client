@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">CamelRaceApp</string>
 
+    <string-array name="spinner">
+        <item>@string/spades</item>
+        <item>@string/diamonds</item>
+        <item>@string/hearts</item>
+        <item>@string/clubs</item>
+    </string-array>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -49,4 +56,14 @@
     <string name="title_connection">Not connected</string>
     <string name="disconnected">Disconnected</string>
     <string name="connected">Connected!</string>
+    <string name="enter_bid_title">Bid</string>
+    <string name="five">5</string>
+    <string name="successful_join">Successfully joined game!</string>
+    <string name="invalid_bid_value">Invalid bid value. Use whole numbers.</string>
+    <string name="spades">Spades</string>
+    <string name="diamonds">Diamonds</string>
+    <string name="hearts">Hearts</string>
+    <string name="clubs">Clubs</string>
+    <string name="unsuccessful_bid">Couldn\'t add your new bid.</string>
+    <string name="successful_bid">Successfully handed in new bid!</string>
 </resources>

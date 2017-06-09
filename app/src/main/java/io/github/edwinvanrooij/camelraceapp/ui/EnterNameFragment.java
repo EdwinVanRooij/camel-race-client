@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -29,11 +28,10 @@ public class EnterNameFragment extends SocketFragment {
         return inflater.inflate(R.layout.fragment_enter_name, container, false);
     }
 
-    @OnClick(R.id.btnConfirm)
+    @OnClick(R.id.btnConfirmUsername)
     public void onButtonConfirmClick() {
         String username = etUsername.getText().toString();
 
-        Toast.makeText(getContext(), String.format("Username is: %s", username), Toast.LENGTH_SHORT).show();
         activity.onSubmitUsername(username);
     }
 }

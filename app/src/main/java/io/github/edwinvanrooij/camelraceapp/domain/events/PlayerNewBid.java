@@ -1,6 +1,7 @@
 package io.github.edwinvanrooij.camelraceapp.domain.events;
 
 
+import io.github.edwinvanrooij.camelraceapp.domain.Bid;
 import io.github.edwinvanrooij.camelraceapp.domain.Camel;
 
 /**
@@ -10,8 +11,7 @@ import io.github.edwinvanrooij.camelraceapp.domain.Camel;
 public class PlayerNewBid {
      private String gameId;
      private Player player;
-     private Camel camel;
-     private int value;
+     private Bid bid;
 
      public String getGameId() {
           return gameId;
@@ -19,6 +19,14 @@ public class PlayerNewBid {
 
      public void setGameId(String gameId) {
           this.gameId = gameId;
+     }
+
+     public Bid getBid() {
+          return bid;
+     }
+
+     public void setBid(Bid bid) {
+          this.bid = bid;
      }
 
      public Player getPlayer() {
@@ -29,22 +37,11 @@ public class PlayerNewBid {
           this.player = player;
      }
 
-     public int getValue() {
-          return value;
-     }
 
-     public void setValue(int value) {
-          this.value = value;
-     }
-
-     public Camel getCamel() {
-          return camel;
-     }
-
-     public PlayerNewBid(String gameId, Player player, Camel camel, int number) {
+     public PlayerNewBid(String gameId, Player player, Bid bid) {
           this.gameId = gameId;
           this.player = player;
-          this.camel = camel;
-          this.value = number;
+          this.bid = bid;
      }
 }
+

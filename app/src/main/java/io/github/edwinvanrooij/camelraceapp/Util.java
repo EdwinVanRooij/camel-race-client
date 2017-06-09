@@ -69,6 +69,11 @@ public class Util {
                         gson.fromJson(wholeJson.get(Event.KEY_EVENT_VALUE).getAsJsonObject().toString(), PersonalResults.class)
                 );
                 break;
+            case Event.KEY_PLAYER_BID_HANDED_IN:
+                event.setValue(
+                        gson.fromJson(wholeJson.get(Event.KEY_EVENT_VALUE), Boolean.class)
+                );
+                break;
             // endregion
             default:
                 throw new Exception(String.format("No suitable event found for:\r\nType '%s'\r\nWhole json: '%s'", type, wholeJson.toString()));

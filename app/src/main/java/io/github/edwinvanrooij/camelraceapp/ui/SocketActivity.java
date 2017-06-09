@@ -20,6 +20,7 @@ import io.github.edwinvanrooij.camelraceapp.R;
 
 import io.github.edwinvanrooij.camelraceapp.Config;
 import io.github.edwinvanrooij.camelraceapp.Util;
+import io.github.edwinvanrooij.camelraceapp.domain.Bid;
 import io.github.edwinvanrooij.camelraceapp.domain.events.Event;
 import io.github.edwinvanrooij.camelraceapp.domain.events.Player;
 import io.github.edwinvanrooij.camelraceapp.domain.events.PlayerJoinRequest;
@@ -54,39 +55,38 @@ public class SocketActivity extends AppCompatActivity {
         client = new OkHttpClient();
 
         gameId = Parcels.unwrap(getIntent().getParcelableExtra(GAME_ID));
-        Toast.makeText(this, String.format("Game ID: %s", gameId), Toast.LENGTH_SHORT).show();
 
         setFragment(EnterNameFragment.class, false);
 
         connectWebSocket();
-        startConnectedChecker();
+//        startConnectedChecker();
     }
 
-    private void startConnectedChecker() {
-        final Handler h = new Handler();
-        final int delay = CONNECTED_CHECKER_INTERVAL * 1000;
+//    private void startConnectedChecker() {
+//        final Handler h = new Handler();
+//        final int delay = CONNECTED_CHECKER_INTERVAL * 1000;
+//
+//        h.postDelayed(new Runnable() {
+//            public void run() {
+//                //do something
+//                if (!connected) {
+//                    System.out.println("Reconnecting");
+//                    reconnect();
+//                } else  {
+//                    System.out.println("Not reconnecting, connected is still true");
+//                }
+//
+//                h.postDelayed(this, delay);
+//            }
+//        }, delay);
+//    }
 
-        h.postDelayed(new Runnable() {
-            public void run() {
-                //do something
-                if (!connected) {
-                    System.out.println("Reconnecting");
-                    reconnect();
-                } else  {
-                    System.out.println("Not reconnecting, connected is still true");
-                }
-
-                h.postDelayed(this, delay);
-            }
-        }, delay);
-    }
-
-    private void reconnect() {
-        connectWebSocket();
-        if (player != null) {
-            onSubmitUsername(player.getName());
-        }
-    }
+//    private void reconnect() {
+//        connectWebSocket();
+//        if (player != null) {
+//            onSubmitUsername(player.getName());
+//        }
+//    }
 
     public void connectWebSocket() {
         try {
@@ -122,6 +122,11 @@ public class SocketActivity extends AppCompatActivity {
         Player player = new Player(username);
         PlayerJoinRequest playerJoinRequest = new PlayerJoinRequest(gameId, player);
         sendMessage(Event.KEY_PLAYER_JOIN, playerJoinRequest, ws);
+    }
+
+    public void onSubmitBid(Bid bid) {
+        PlayerNewBid playerNewBid = new PlayerNewBid(gameId, player, bid);
+        sendMessage(Event.KEY_PLAYER_NEW_BID, playerNewBid, ws);
     }
 
     private final class EchoWebSocketListener extends WebSocketListener {
@@ -194,13 +199,48 @@ public class SocketActivity extends AppCompatActivity {
                     Player player = (Player) event.getValue();
                     this.player = player;
                     System.out.println(String.format("Got %s back!", player));
+                    onPlayerJoinedSuccessfully();
                     break;
                 }
+                case Event.KEY_PLAYER_BID_HANDED_IN: {
+                    Boolean succeeded = (Boolean) event.getValue();
+                    onHandedBid(succeeded);
+                    break;
+                }
+
 
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void onHandedBid(boolean successful) {
+        if (successful) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.successful_bid), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.unsuccessful_bid), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void onPlayerJoinedSuccessfully() {
+        setFragment(BidFragment.class, false);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.successful_join), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void sendMessage(String eventType, Object value, WebSocket ws) {
