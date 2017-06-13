@@ -5,12 +5,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import io.github.edwinvanrooij.camelraceapp.domain.events.Event;
-import io.github.edwinvanrooij.camelraceapp.domain.events.GameStart;
-import io.github.edwinvanrooij.camelraceapp.domain.events.PersonalResults;
-import io.github.edwinvanrooij.camelraceapp.domain.events.Player;
-import io.github.edwinvanrooij.camelraceapp.domain.events.PlayerJoinRequest;
-import io.github.edwinvanrooij.camelraceapp.domain.events.PlayerNewBid;
+import io.github.edwinvanrooij.camelraceshared.domain.Player;
+import io.github.edwinvanrooij.camelraceshared.events.Event;
+import io.github.edwinvanrooij.camelraceshared.events.GameStart;
+import io.github.edwinvanrooij.camelraceshared.events.PersonalResults;
+import io.github.edwinvanrooij.camelraceshared.events.PlayerJoinRequest;
+import io.github.edwinvanrooij.camelraceshared.events.PlayerNewBid;
 
 /**
  * Created by eddy

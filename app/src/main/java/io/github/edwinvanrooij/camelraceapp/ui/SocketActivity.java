@@ -20,11 +20,11 @@ import io.github.edwinvanrooij.camelraceapp.R;
 
 import io.github.edwinvanrooij.camelraceapp.Config;
 import io.github.edwinvanrooij.camelraceapp.Util;
-import io.github.edwinvanrooij.camelraceapp.domain.Bid;
-import io.github.edwinvanrooij.camelraceapp.domain.events.Event;
-import io.github.edwinvanrooij.camelraceapp.domain.events.Player;
-import io.github.edwinvanrooij.camelraceapp.domain.events.PlayerJoinRequest;
-import io.github.edwinvanrooij.camelraceapp.domain.events.PlayerNewBid;
+import io.github.edwinvanrooij.camelraceshared.domain.Bid;
+import io.github.edwinvanrooij.camelraceshared.domain.Player;
+import io.github.edwinvanrooij.camelraceshared.events.Event;
+import io.github.edwinvanrooij.camelraceshared.events.PlayerJoinRequest;
+import io.github.edwinvanrooij.camelraceshared.events.PlayerNewBid;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
