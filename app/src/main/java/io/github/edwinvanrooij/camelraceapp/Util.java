@@ -34,28 +34,7 @@ public class Util {
 
         Event event = new Event(type);
         switch (type) {
-            // region Server side
-            case Event.KEY_GAME_CREATE:
-                // N/A
-                break;
-            case Event.KEY_PLAYER_JOIN:
-                event.setValue(
-                        gson.fromJson(wholeJson.get(Event.KEY_EVENT_VALUE).getAsJsonObject().toString(), PlayerJoinRequest.class)
-                );
-                break;
-            case Event.KEY_PLAYER_NEW_BID:
-                event.setValue(
-                        gson.fromJson(wholeJson.get(Event.KEY_EVENT_VALUE).getAsJsonObject().toString(), PlayerNewBid.class)
-                );
-                break;
-            case Event.KEY_GAME_START:
-                event.setValue(
-                        gson.fromJson(wholeJson.get(Event.KEY_EVENT_VALUE).getAsJsonObject().toString(), GameStart.class)
-                );
-                break;
-            // endregion
 
-            // region Client side
             case Event.KEY_PLAYER_JOINED:
                 event.setValue(
                         gson.fromJson(wholeJson.get(Event.KEY_EVENT_VALUE).getAsJsonObject().toString(), Player.class)
@@ -74,7 +53,7 @@ public class Util {
                         gson.fromJson(wholeJson.get(Event.KEY_EVENT_VALUE), Boolean.class)
                 );
                 break;
-            // endregion
+
             default:
                 throw new Exception(String.format("No suitable event found for:\r\nType '%s'\r\nWhole json: '%s'", type, wholeJson.toString()));
         }
