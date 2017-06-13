@@ -19,10 +19,8 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.github.edwinvanrooij.camelraceapp.R;
-import io.github.edwinvanrooij.camelraceapp.domain.Bid;
-import io.github.edwinvanrooij.camelraceapp.domain.Camel;
-import io.github.edwinvanrooij.camelraceapp.domain.Card;
-import io.github.edwinvanrooij.camelraceapp.domain.CardType;
+import io.github.edwinvanrooij.camelraceshared.domain.Bid;
+import io.github.edwinvanrooij.camelraceshared.domain.CardType;
 
 import static io.github.edwinvanrooij.camelraceapp.R.id.spinner;
 
