@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -32,6 +33,8 @@ public class BidFragment extends SocketFragment {
 
     @BindView(R.id.etBidValue)
     EditText etBidValue;
+    @BindView(R.id.btnConfirmBid)
+    Button btnConfirmBid;
     @BindView(R.id.spinner)
     Spinner spinner;
 
@@ -54,6 +57,18 @@ public class BidFragment extends SocketFragment {
         super.onViewCreated(view, savedInstanceState);
 
         initSpinner();
+    }
+
+    public void disableBids() {
+        etBidValue.setEnabled(false);
+        btnConfirmBid.setEnabled(false);
+        spinner.setEnabled(false);
+    }
+
+    public void enableBids() {
+        etBidValue.setEnabled(true);
+        btnConfirmBid.setEnabled(true);
+        spinner.setEnabled(true);
     }
 
     public void initSpinner() {

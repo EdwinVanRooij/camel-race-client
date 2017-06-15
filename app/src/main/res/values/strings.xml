@@ -66,4 +66,6 @@
     <string name="clubs">Clubs</string>
     <string name="unsuccessful_bid">Couldn\'t add your new bid.</string>
     <string name="successful_bid">Successfully handed in new bid!</string>
+    <string name="game_started">Game started!</string>
+    <string name="game_ended">Game over!</string>
 </resources>
