@@ -9,6 +9,7 @@ public class Config {
     public static final String GAME_ID = "url";
 
     public static final int CONNECTED_CHECKER_INTERVAL = 10; // in seconds
+//    private final static String BACKEND_IP = "http://88.159.34.253";
     private final static String BACKEND_IP = "192.168.178.37";
 //    private final static String BACKEND_IP = "192.168.5.115";
 //    private final static String BACKEND_IP = "172.17.0.1";

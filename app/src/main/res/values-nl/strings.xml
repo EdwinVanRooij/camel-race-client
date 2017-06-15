@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CamelRaceApp</string>
+    <string name="action_settings">Instellingen</string>
+    <string name="button_confirm">Bevestig</string>
+    <string name="button_connect">Verbonden</string>
+    <string name="button_join">Meedoen!</string>
+    <string name="button_send">Sturen!</string>
+    <string name="cardpick_description"></string>
+    <string name="clubs">Klaveren</string>
+    <string name="connected">Verbonden</string>
+    <string name="diamonds">Ruiten</string>
+    <string name="enter_bid_title">Bod</string>
+    <string name="disconnected">Niet verbonden</string>
+    <string name="enter_name_title">Gebruikersnaam</string>
+    <string name="five"></string>
+    <string name="fragment_main_title">Welkom!</string>
+    <string name="fragment_settings_desc">Instellingen...</string>
+    <string name="fragment_settings_title"></string>
+    <string name="game_started">Spel gestart!</string>
+    <string name="hearts">Harten</string>
+    <string name="hint_username">Mijn naam</string>
+    <string name="invalid_bid_value">Ongeldig bod</string>
+    <string name="spades">Schoppen</string>
+    <string name="successful_bid">Bod toegevoegd!</string>
+    <string name="successful_join">Verbonden!</string>
+    <string name="title_connection">Niet verbonden</string>
+    <string name="title_game_id">Spel ID</string>
+    <string name="unsuccessful_bid">Kon je bod niet toevoegen.</string>
+    <string name="wait_description"></string>
+</resources>
