@@ -7,7 +7,6 @@ import com.google.gson.JsonParser;
 
 import io.github.edwinvanrooij.camelraceshared.domain.Player;
 import io.github.edwinvanrooij.camelraceshared.events.Event;
-import io.github.edwinvanrooij.camelraceshared.events.GameStart;
 import io.github.edwinvanrooij.camelraceshared.events.PersonalResults;
 import io.github.edwinvanrooij.camelraceshared.events.PlayerJoinRequest;
 import io.github.edwinvanrooij.camelraceshared.events.PlayerNewBid;
@@ -44,9 +43,9 @@ public class Util {
                 // N/A
                 break;
             case Event.KEY_GAME_OVER_PERSONAL_RESULTS:
-                event.setValue(
-                        gson.fromJson(wholeJson.get(Event.KEY_EVENT_VALUE).getAsJsonObject().toString(), PersonalResults.class)
-                );
+//                event.setValue(
+//                        gson.fromJson(wholeJson.get(Event.KEY_EVENT_VALUE).getAsJsonObject().toString(), PersonalResults.class)
+//                );
                 break;
             case Event.KEY_PLAYER_BID_HANDED_IN:
                 event.setValue(

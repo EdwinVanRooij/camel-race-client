@@ -202,12 +202,22 @@ public class SocketActivity extends AppCompatActivity {
                     onPlayerJoinedSuccessfully();
                     break;
                 }
+
                 case Event.KEY_PLAYER_BID_HANDED_IN: {
                     Boolean succeeded = (Boolean) event.getValue();
                     onHandedBid(succeeded);
                     break;
                 }
 
+                case Event.KEY_GAME_STARTED: {
+                    onGameStarted();
+                    break;
+                }
+
+                case Event.KEY_GAME_OVER_PERSONAL_RESULTS: {
+                    onGameEnded();
+                    break;
+                }
 
             }
         } catch (Exception e) {
@@ -231,6 +241,34 @@ public class SocketActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void onGameStarted() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.game_started), Toast.LENGTH_SHORT).show();
+
+                BidFragment bidFragment = (BidFragment) getSupportFragmentManager().findFragmentByTag(BidFragment.class.getSimpleName());
+                if (bidFragment != null && bidFragment.isVisible()) {
+                    bidFragment.disableBids();
+                }
+            }
+        });
+    }
+
+    private void onGameEnded() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.game_ended), Toast.LENGTH_SHORT).show();
+
+                BidFragment bidFragment = (BidFragment) getSupportFragmentManager().findFragmentByTag(BidFragment.class.getSimpleName());
+                if (bidFragment != null && bidFragment.isVisible()) {
+                    bidFragment.enableBids();
+                }
+            }
+        });
     }
 
     private void onPlayerJoinedSuccessfully() {
