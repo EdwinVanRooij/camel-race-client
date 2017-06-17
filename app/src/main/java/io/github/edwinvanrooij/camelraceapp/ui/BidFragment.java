@@ -89,6 +89,7 @@ public class BidFragment extends SocketFragment {
         boolean validBid = Pattern.matches("^\\d+$", bidValue);
         if (!validBid) {
             Toast.makeText(activity, getResources().getString(R.string.invalid_bid_value), Toast.LENGTH_SHORT).show();
+            return;
         }
 
         CardType type = null;
