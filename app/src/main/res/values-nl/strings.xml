@@ -23,4 +23,5 @@
     <string name="title_connection">Niet verbonden</string>
     <string name="title_game_id">Spel ID</string>
     <string name="unsuccessful_bid">Kon je bod niet toevoegen.</string>
+    <string name="empty_bid">Vul een positieve waarde in.</string>
 </resources>
