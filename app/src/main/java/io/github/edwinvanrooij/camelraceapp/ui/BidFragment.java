@@ -23,6 +23,8 @@ import io.github.edwinvanrooij.camelraceapp.R;
 import io.github.edwinvanrooij.camelraceshared.domain.Bid;
 import io.github.edwinvanrooij.camelraceshared.domain.CardType;
 
+import static io.github.edwinvanrooij.camelraceapp.R.id.default_activity_button;
+import static io.github.edwinvanrooij.camelraceapp.R.id.etBidValue;
 import static io.github.edwinvanrooij.camelraceapp.R.id.spinner;
 
 
@@ -50,6 +52,27 @@ public class BidFragment extends SocketFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_bid   , container, false);
+    }
+
+    public void setBid(Bid bid) {
+        etBidValue.setText(bid.getValue());
+
+        switch (bid.getType()) {
+            case CLUBS:
+                spinner.setSelection(3);
+                break;
+            case HEARTS:
+                spinner.setSelection(2);
+                break;
+            case DIAMONDS:
+                spinner.setSelection(1);
+                break;
+            case SPADES:
+                spinner.setSelection(0);
+                break;
+            default:
+                //swag
+        }
     }
 
     @Override
@@ -85,11 +108,26 @@ public class BidFragment extends SocketFragment {
 
     @OnClick(R.id.btnConfirmBid)
     public void onButtonConfirmClick() {
+        Bid bid = getBid();
+        if (bid != null) {
+            activity.onSubmitBid(bid);
+        }
+    }
+
+    @OnClick(R.id.btnReady)
+    public void onButtonReadyClick() {
+        Bid bid = getBid();
+        if (bid != null) {
+            activity.onReady(bid);
+        }
+    }
+
+    private Bid getBid() {
         String bidValue = etBidValue.getText().toString();
         boolean validBid = Pattern.matches("^\\d+$", bidValue);
         if (!validBid) {
             Toast.makeText(activity, getResources().getString(R.string.invalid_bid_value), Toast.LENGTH_SHORT).show();
-            return;
+            return null;
         }
 
         CardType type = null;
@@ -108,8 +146,7 @@ public class BidFragment extends SocketFragment {
                     , Toast.LENGTH_SHORT).show();
         }
 
-        Bid bid = new Bid(type, Integer.valueOf(bidValue));
-
-        activity.onSubmitBid(bid);
+        return new Bid(type, Integer.valueOf(bidValue));
     }
+
 }

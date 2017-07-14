@@ -25,6 +25,7 @@ import io.github.edwinvanrooij.camelraceshared.domain.Player;
 import io.github.edwinvanrooij.camelraceshared.events.Event;
 import io.github.edwinvanrooij.camelraceshared.events.PlayerJoinRequest;
 import io.github.edwinvanrooij.camelraceshared.events.PlayerNewBid;
+import io.github.edwinvanrooij.camelraceshared.events.PlayerNotReady;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -45,6 +46,9 @@ public class SocketActivity extends AppCompatActivity {
     private WebSocket ws;
     private boolean connected = false;
     private Player player;
+
+    private Bid currentBid;
+    private Bid newBid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,8 +129,18 @@ public class SocketActivity extends AppCompatActivity {
     }
 
     public void onSubmitBid(Bid bid) {
+        newBid = bid;
         PlayerNewBid playerNewBid = new PlayerNewBid(gameId, player, bid);
         sendMessage(Event.KEY_PLAYER_NEW_BID, playerNewBid, ws);
+    }
+
+    public void onNotReadyClick() {
+        sendMessage(Event.KEY_PLAYER_NOT_READY, new PlayerNotReady(gameId, player), ws);
+    }
+
+    public void onReady(Bid bid) {
+        PlayerNewBid playerNewBid = new PlayerNewBid(gameId, player, bid);
+        sendMessage(Event.KEY_PLAYER_READY, playerNewBid, ws);
     }
 
     private final class EchoWebSocketListener extends WebSocketListener {
@@ -209,6 +223,18 @@ public class SocketActivity extends AppCompatActivity {
                     break;
                 }
 
+                case Event.KEY_PLAYER_READY_SUCCESS: {
+                    Boolean succeeded = (Boolean) event.getValue();
+                    onReadySuccess(succeeded);
+                    break;
+                }
+
+                case Event.KEY_PLAYER_NOT_READY_SUCCESS: {
+                    Boolean succeeded = (Boolean) event.getValue();
+                    onNotReadySuccess(succeeded);
+                    break;
+                }
+
                 case Event.KEY_GAME_STARTED: {
                     onGameStarted();
                     break;
@@ -230,6 +256,7 @@ public class SocketActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    currentBid = newBid;
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.successful_bid), Toast.LENGTH_SHORT).show();
                 }
             });
@@ -243,14 +270,54 @@ public class SocketActivity extends AppCompatActivity {
         }
     }
 
+    private void onReadySuccess(boolean successful) {
+        if (successful) {
+            setFragment(ReadyFragment.class, false);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.successful_ready), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.unsuccessful_ready), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void onNotReadySuccess(boolean successful) {
+        if (successful) {
+            setFragment(BidFragment.class, false);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.successful_not_ready), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.unsuccessful_not_ready), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
     private void onGameStarted() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                setFragment(BidFragment.class, false);
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.game_started), Toast.LENGTH_SHORT).show();
 
                 BidFragment bidFragment = (BidFragment) getSupportFragmentManager().findFragmentByTag(BidFragment.class.getSimpleName());
                 if (bidFragment != null && bidFragment.isVisible()) {
+                    bidFragment.setBid(currentBid);
                     bidFragment.disableBids();
                 }
             }
