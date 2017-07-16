@@ -13,6 +13,8 @@ import android.widget.Toast;
 import org.parceler.Parcels;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,6 +26,7 @@ import io.github.edwinvanrooij.camelraceshared.domain.Bid;
 import io.github.edwinvanrooij.camelraceshared.domain.Player;
 import io.github.edwinvanrooij.camelraceshared.events.Event;
 import io.github.edwinvanrooij.camelraceshared.events.PlayAgainRequest;
+import io.github.edwinvanrooij.camelraceshared.events.PlayerAliveCheck;
 import io.github.edwinvanrooij.camelraceshared.events.PlayerJoinRequest;
 import io.github.edwinvanrooij.camelraceshared.events.PlayerNewBid;
 import io.github.edwinvanrooij.camelraceshared.events.PlayerNotReady;
@@ -248,6 +251,12 @@ public class SocketActivity extends AppCompatActivity {
                     break;
                 }
 
+                case Event.KEY_PLAYER_ALIVE_CHECK_CONFIRMED: {
+                    Boolean confirmed = (Boolean) event.getValue();
+                    onAliveConfirmed(confirmed);
+                    break;
+                }
+
                 case Event.KEY_GAME_OVER_PERSONAL_RESULTS: {
                     onGameEnded();
                     break;
@@ -273,6 +282,24 @@ public class SocketActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.unsuccessful_bid), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void onAliveConfirmed(boolean successful) {
+        if (successful) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.alive_confirmed), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.alive_failed), Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -350,6 +377,16 @@ public class SocketActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.successful_join), Toast.LENGTH_SHORT).show();
             }
         });
+
+        int interval = 2; // in seconds
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                sendMessage(Event.KEY_PLAYER_ALIVE_CHECK, new PlayerAliveCheck(gameId, player), ws);
+            }
+        };
+        timer.schedule(task, 0, interval * 1000);
     }
 
     private void sendMessage(String eventType, Object value, WebSocket ws) {

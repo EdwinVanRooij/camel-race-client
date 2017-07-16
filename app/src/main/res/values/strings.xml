@@ -66,4 +66,6 @@
     <string name="no_bid_set">No bid set! :(</string>
     <string name="placeholder_text">5</string>
     <string name="button_play_again">Play again!</string>
+    <string name="alive_failed">Not connected anymore.</string>
+    <string name="alive_confirmed">Passed connectivity test.</string>
 </resources>

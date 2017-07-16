@@ -33,6 +33,11 @@ public class Util {
         Event event = new Event(type);
         switch (type) {
 
+            case Event.KEY_PLAYER_ALIVE_CHECK_CONFIRMED:
+                event.setValue(
+                        gson.fromJson(wholeJson.get(Event.KEY_EVENT_VALUE).getAsJsonObject().toString(), Boolean.class)
+                );
+                break;
             case Event.KEY_PLAYER_JOINED:
                 event.setValue(
                         gson.fromJson(wholeJson.get(Event.KEY_EVENT_VALUE).getAsJsonObject().toString(), Player.class)
