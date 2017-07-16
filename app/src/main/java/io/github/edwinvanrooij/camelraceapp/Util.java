@@ -26,7 +26,6 @@ public class Util {
 
     public static Event jsonToEvent(String json) throws Exception {
         JsonObject wholeJson = parser.parse(json).getAsJsonObject();
-        System.out.println(String.format("Whole: %s", wholeJson.toString()));
 
         String type = wholeJson.get(Event.KEY_EVENT_TYPE).getAsString();
         System.out.println(String.format("Type: %s", type));
@@ -37,6 +36,11 @@ public class Util {
             case Event.KEY_PLAYER_JOINED:
                 event.setValue(
                         gson.fromJson(wholeJson.get(Event.KEY_EVENT_VALUE).getAsJsonObject().toString(), Player.class)
+                );
+                break;
+            case Event.KEY_PLAY_AGAIN_SUCCESSFUL:
+                event.setValue(
+                        gson.fromJson(wholeJson.get(Event.KEY_EVENT_VALUE), Boolean.class)
                 );
                 break;
             case Event.KEY_PLAYER_READY_SUCCESS:

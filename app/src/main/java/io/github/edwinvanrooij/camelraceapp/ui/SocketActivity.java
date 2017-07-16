@@ -23,6 +23,7 @@ import io.github.edwinvanrooij.camelraceapp.Util;
 import io.github.edwinvanrooij.camelraceshared.domain.Bid;
 import io.github.edwinvanrooij.camelraceshared.domain.Player;
 import io.github.edwinvanrooij.camelraceshared.events.Event;
+import io.github.edwinvanrooij.camelraceshared.events.PlayAgainRequest;
 import io.github.edwinvanrooij.camelraceshared.events.PlayerJoinRequest;
 import io.github.edwinvanrooij.camelraceshared.events.PlayerNewBid;
 import io.github.edwinvanrooij.camelraceshared.events.PlayerNotReady;
@@ -134,11 +135,17 @@ public class SocketActivity extends AppCompatActivity {
         sendMessage(Event.KEY_PLAYER_NEW_BID, playerNewBid, ws);
     }
 
+    public void onPlayAgain() {
+        PlayAgainRequest playAgainRequest = new PlayAgainRequest(gameId, player);
+        sendMessage(Event.KEY_PLAY_AGAIN, playAgainRequest, ws);
+    }
+
     public void onNotReadyClick() {
         sendMessage(Event.KEY_PLAYER_NOT_READY, new PlayerNotReady(gameId, player), ws);
     }
 
     public void onReady(Bid bid) {
+        newBid = bid;
         PlayerNewBid playerNewBid = new PlayerNewBid(gameId, player, bid);
         sendMessage(Event.KEY_PLAYER_READY, playerNewBid, ws);
     }
@@ -225,6 +232,7 @@ public class SocketActivity extends AppCompatActivity {
 
                 case Event.KEY_PLAYER_READY_SUCCESS: {
                     Boolean succeeded = (Boolean) event.getValue();
+                    onHandedBid(succeeded);
                     onReadySuccess(succeeded);
                     break;
                 }
@@ -273,6 +281,7 @@ public class SocketActivity extends AppCompatActivity {
     private void onReadySuccess(boolean successful) {
         if (successful) {
             setFragment(ReadyFragment.class, false);
+            onHandedBid(true);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -308,18 +317,16 @@ public class SocketActivity extends AppCompatActivity {
         }
     }
 
+    public Bid getBid() {
+        return currentBid;
+    }
+
     private void onGameStarted() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                setFragment(BidFragment.class, false);
+                setFragment(RacingFragment.class, false);
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.game_started), Toast.LENGTH_SHORT).show();
-
-                BidFragment bidFragment = (BidFragment) getSupportFragmentManager().findFragmentByTag(BidFragment.class.getSimpleName());
-                if (bidFragment != null && bidFragment.isVisible()) {
-                    bidFragment.setBid(currentBid);
-                    bidFragment.disableBids();
-                }
             }
         });
     }
@@ -328,12 +335,9 @@ public class SocketActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                RacingFragment racingFragment = (RacingFragment) getSupportFragmentManager().findFragmentByTag(RacingFragment.class.getSimpleName());
+                racingFragment.setBtnPlayAgain();
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.game_ended), Toast.LENGTH_SHORT).show();
-
-                BidFragment bidFragment = (BidFragment) getSupportFragmentManager().findFragmentByTag(BidFragment.class.getSimpleName());
-                if (bidFragment != null && bidFragment.isVisible()) {
-                    bidFragment.enableBids();
-                }
             }
         });
     }

@@ -62,4 +62,8 @@
     <string name="unsuccessful_ready">Could not process ready request.</string>
     <string name="successful_not_ready">Not ready anymore.</string>
     <string name="unsuccessful_not_ready">Could not process unready request.</string>
+    <string name="title_racing">Racing!</string>
+    <string name="no_bid_set">No bid set! :(</string>
+    <string name="placeholder_text">5</string>
+    <string name="button_play_again">Play again!</string>
 </resources>

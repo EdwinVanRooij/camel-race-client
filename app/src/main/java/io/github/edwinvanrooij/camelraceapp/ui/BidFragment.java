@@ -51,11 +51,11 @@ public class BidFragment extends SocketFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_bid   , container, false);
+        return inflater.inflate(R.layout.fragment_bid, container, false);
     }
 
     public void setBid(Bid bid) {
-        etBidValue.setText(bid.getValue());
+        etBidValue.setText(String.valueOf(bid.getValue()));
 
         switch (bid.getType()) {
             case CLUBS:
@@ -80,18 +80,10 @@ public class BidFragment extends SocketFragment {
         super.onViewCreated(view, savedInstanceState);
 
         initSpinner();
-    }
-
-    public void disableBids() {
-        etBidValue.setEnabled(false);
-        btnConfirmBid.setEnabled(false);
-        spinner.setEnabled(false);
-    }
-
-    public void enableBids() {
-        etBidValue.setEnabled(true);
-        btnConfirmBid.setEnabled(true);
-        spinner.setEnabled(true);
+        Bid bid = activity.getBid();
+        if (bid != null) {
+            setBid(bid);
+        }
     }
 
     public void initSpinner() {
