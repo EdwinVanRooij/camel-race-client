@@ -24,4 +24,20 @@
     <string name="title_game_id">Spel ID</string>
     <string name="unsuccessful_bid">Kon je bod niet toevoegen.</string>
     <string name="empty_bid">Vul een positieve waarde in.</string>
+    <string name="alive_confirmed">Connectie leeft nog.</string>
+    <string name="alive_failed">Connectie verbroken.</string>
+    <string name="button_not_ready">Niet Klaar</string>
+    <string name="button_play_again">Speel nog eens!</string>
+    <string name="button_ready">Klaar</string>
+    <string name="no_bid_set">Geen bod gedaan! :(</string>
+    <string name="placeholder_text">4</string>
+    <string name="result_item_lost">Verloren.</string>
+    <string name="result_item_won">Gewonnen!</string>
+    <string name="successful_not_ready">Niet meer klaar.</string>
+    <string name="successful_ready">\'Klaar\' gestuurd.</string>
+    <string name="title_default">Boi</string>
+    <string name="title_racing">Aan het racen!</string>
+    <string name="title_ready">Ik ben klaar!</string>
+    <string name="unsuccessful_not_ready">Kon \'niet klaar\' verzoek niet sturen.</string>
+    <string name="unsuccessful_ready">Kon \'klaar\' verzoek niet versturen.</string>
 </resources>
