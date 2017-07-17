@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import io.github.edwinvanrooij.camelraceshared.domain.PersonalResultItem;
 import io.github.edwinvanrooij.camelraceshared.domain.Player;
 import io.github.edwinvanrooij.camelraceshared.events.Event;
 import io.github.edwinvanrooij.camelraceshared.events.PersonalResults;
@@ -28,14 +29,13 @@ public class Util {
         JsonObject wholeJson = parser.parse(json).getAsJsonObject();
 
         String type = wholeJson.get(Event.KEY_EVENT_TYPE).getAsString();
-        System.out.println(String.format("Type: %s", type));
 
         Event event = new Event(type);
         switch (type) {
 
             case Event.KEY_PLAYER_ALIVE_CHECK_CONFIRMED:
                 event.setValue(
-                        gson.fromJson(wholeJson.get(Event.KEY_EVENT_VALUE).getAsJsonObject().toString(), Boolean.class)
+                        gson.fromJson(wholeJson.get(Event.KEY_EVENT_VALUE), Boolean.class)
                 );
                 break;
             case Event.KEY_PLAYER_JOINED:
@@ -62,9 +62,9 @@ public class Util {
                 // N/A
                 break;
             case Event.KEY_GAME_OVER_PERSONAL_RESULTS:
-//                event.setValue(
-//                        gson.fromJson(wholeJson.get(Event.KEY_EVENT_VALUE).getAsJsonObject().toString(), PersonalResults.class)
-//                );
+                event.setValue(
+                        gson.fromJson(wholeJson.get(Event.KEY_EVENT_VALUE).getAsJsonObject().toString(), PersonalResultItem.class)
+                );
                 break;
             case Event.KEY_PLAYER_BID_HANDED_IN:
                 event.setValue(

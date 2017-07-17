@@ -68,4 +68,7 @@
     <string name="button_play_again">Play again!</string>
     <string name="alive_failed">Not connected anymore.</string>
     <string name="alive_confirmed">Passed connectivity test.</string>
+    <string name="title_default">Default title!</string>
+    <string name="result_item_won">You won!</string>
+    <string name="result_item_lost">You lost.</string>
 </resources>

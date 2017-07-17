@@ -15,19 +15,30 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/title"
+                android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/spacing_large"
                 android:layout_marginRight="@dimen/spacing_large"
                 android:layout_marginTop="@dimen/spacing_large"
-                android:text="@string/title_ready"
+                android:text="@string/title_default"
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                android:textColor="@color/green" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+            <TextView
+                android:id="@+id/tvBid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/spacing_large"
+                android:layout_marginRight="@dimen/spacing_large"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text="@string/title_default"
+                android:textAlignment="center"
+                android:visibility="gone"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <Button
-                android:id="@+id/btnNotReady"
+                android:id="@+id/btnPlayAgain"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="75dp"
@@ -35,7 +46,7 @@
                 android:layout_marginLeft="@dimen/spacing_large"
                 android:layout_marginRight="@dimen/spacing_large"
                 android:layout_marginTop="@dimen/spacing_large"
-                android:text="@string/button_not_ready" />
+                android:text="@string/button_play_again" />
 
         </LinearLayout>
 

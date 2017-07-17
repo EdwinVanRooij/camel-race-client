@@ -22,8 +22,8 @@ import io.github.edwinvanrooij.camelraceshared.domain.Bid;
  */
 public class RacingFragment extends SocketFragment {
 
-    @BindView(R.id.btnPlayAgain)
-    Button btnPlayAgain;
+//    @BindView(R.id.btnPlayAgain)
+//    Button btnPlayAgain;
     @BindView(R.id.tvBid)
     TextView tvBid;
     @BindView(R.id.ivCamel)
@@ -60,12 +60,8 @@ public class RacingFragment extends SocketFragment {
         }
     }
 
-    public void setBtnPlayAgain() {
-        btnPlayAgain.setVisibility(View.VISIBLE);
-    }
-
-    @OnClick(R.id.btnPlayAgain)
-    public void onPlayAgainClicked() {
-        activity.onPlayAgain();
-    }
+//    @OnClick(R.id.btnPlayAgain)
+//    public void onPlayAgainClicked() {
+//        activity.onPlayAgain();
+//    }
 }

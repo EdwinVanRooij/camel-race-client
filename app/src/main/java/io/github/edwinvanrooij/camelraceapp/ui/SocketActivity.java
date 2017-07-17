@@ -23,6 +23,7 @@ import io.github.edwinvanrooij.camelraceapp.R;
 import io.github.edwinvanrooij.camelraceapp.Config;
 import io.github.edwinvanrooij.camelraceapp.Util;
 import io.github.edwinvanrooij.camelraceshared.domain.Bid;
+import io.github.edwinvanrooij.camelraceshared.domain.PersonalResultItem;
 import io.github.edwinvanrooij.camelraceshared.domain.Player;
 import io.github.edwinvanrooij.camelraceshared.events.Event;
 import io.github.edwinvanrooij.camelraceshared.events.PlayAgainRequest;
@@ -49,10 +50,12 @@ public class SocketActivity extends AppCompatActivity {
     private String gameId;
     private WebSocket ws;
     private boolean connected = false;
+    private Timer timer;
     private Player player;
 
     private Bid currentBid;
     private Bid newBid;
+    private PersonalResultItem resultItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,7 +196,7 @@ public class SocketActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         tvTitleConnect.setText(R.string.connected);
-                        tvTitleConnect.setTextColor(Color.GREEN);
+                        tvTitleConnect.setTextColor(getResources().getColor(R.color.green));
                         connected = true;
                     }
                 }
@@ -206,7 +209,7 @@ public class SocketActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         tvTitleConnect.setText(R.string.disconnected);
-                        tvTitleConnect.setTextColor(Color.RED);
+                        tvTitleConnect.setTextColor(getResources().getColor(R.color.red));
                         connected = false;
                     }
                 }
@@ -258,6 +261,8 @@ public class SocketActivity extends AppCompatActivity {
                 }
 
                 case Event.KEY_GAME_OVER_PERSONAL_RESULTS: {
+                    PersonalResultItem item = (PersonalResultItem) event.getValue();
+                    resultItem = item;
                     onGameEnded();
                     break;
                 }
@@ -288,14 +293,7 @@ public class SocketActivity extends AppCompatActivity {
     }
 
     private void onAliveConfirmed(boolean successful) {
-        if (successful) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.alive_confirmed), Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else {
+        if (!successful) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -347,6 +345,9 @@ public class SocketActivity extends AppCompatActivity {
     public Bid getBid() {
         return currentBid;
     }
+    public PersonalResultItem getResultItem() {
+        return resultItem;
+    }
 
     private void onGameStarted() {
         runOnUiThread(new Runnable() {
@@ -358,12 +359,19 @@ public class SocketActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        System.out.println("Timer is now canceled");
+        timer.cancel();
+    }
+
     private void onGameEnded() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                RacingFragment racingFragment = (RacingFragment) getSupportFragmentManager().findFragmentByTag(RacingFragment.class.getSimpleName());
-                racingFragment.setBtnPlayAgain();
+                setFragment(ResultFragment.class, false);
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.game_ended), Toast.LENGTH_SHORT).show();
             }
         });
@@ -378,8 +386,11 @@ public class SocketActivity extends AppCompatActivity {
             }
         });
 
+        if (timer != null) {
+            timer.cancel();
+        }
         int interval = 2; // in seconds
-        Timer timer = new Timer();
+        timer = new Timer();
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
