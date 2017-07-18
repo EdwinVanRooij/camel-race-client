@@ -18,6 +18,7 @@ import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.github.edwinvanrooij.camelraceapp.BuildConfig;
 import io.github.edwinvanrooij.camelraceapp.R;
 
 import io.github.edwinvanrooij.camelraceapp.Config;
@@ -101,7 +102,7 @@ public class SocketActivity extends AppCompatActivity {
 
     public void connectWebSocket() {
         try {
-            Request request = new Request.Builder().url(Config.BACKEND_CONNECTION_URL).build();
+            Request request = new Request.Builder().url(BuildConfig.BACKEND_CONNECTION_URL).build();
             EchoWebSocketListener listener = new EchoWebSocketListener();
             ws = client.newWebSocket(request, listener);
         } catch (Exception e) {
@@ -364,7 +365,9 @@ public class SocketActivity extends AppCompatActivity {
         super.onStop();
 
         System.out.println("Timer is now canceled");
-        timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 
     private void onGameEnded() {
