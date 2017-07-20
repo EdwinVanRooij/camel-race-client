@@ -25,13 +25,13 @@ import io.github.edwinvanrooij.camelraceapp.Config;
 import io.github.edwinvanrooij.camelraceapp.Util;
 import io.github.edwinvanrooij.camelraceshared.domain.Bid;
 import io.github.edwinvanrooij.camelraceshared.domain.PersonalResultItem;
+import io.github.edwinvanrooij.camelraceshared.domain.PlayAgainRequest;
 import io.github.edwinvanrooij.camelraceshared.domain.Player;
+import io.github.edwinvanrooij.camelraceshared.domain.PlayerAliveCheck;
+import io.github.edwinvanrooij.camelraceshared.domain.PlayerJoinRequest;
+import io.github.edwinvanrooij.camelraceshared.domain.PlayerNewBid;
+import io.github.edwinvanrooij.camelraceshared.domain.PlayerNotReady;
 import io.github.edwinvanrooij.camelraceshared.events.Event;
-import io.github.edwinvanrooij.camelraceshared.events.PlayAgainRequest;
-import io.github.edwinvanrooij.camelraceshared.events.PlayerAliveCheck;
-import io.github.edwinvanrooij.camelraceshared.events.PlayerJoinRequest;
-import io.github.edwinvanrooij.camelraceshared.events.PlayerNewBid;
-import io.github.edwinvanrooij.camelraceshared.events.PlayerNotReady;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -262,8 +262,7 @@ public class SocketActivity extends AppCompatActivity {
                 }
 
                 case Event.KEY_GAME_OVER_PERSONAL_RESULTS: {
-                    PersonalResultItem item = (PersonalResultItem) event.getValue();
-                    resultItem = item;
+                    resultItem = (PersonalResultItem) event.getValue();
                     onGameEnded();
                     break;
                 }
