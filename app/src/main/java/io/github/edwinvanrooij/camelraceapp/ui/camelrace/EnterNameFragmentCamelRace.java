@@ -1,14 +1,12 @@
-package io.github.edwinvanrooij.camelraceapp.ui;
+package io.github.edwinvanrooij.camelraceapp.ui.camelrace;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -18,7 +16,7 @@ import io.github.edwinvanrooij.camelraceapp.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EnterNameFragment extends SocketFragment {
+public class EnterNameFragmentCamelRace extends CamelRaceSocketFragment {
 
     @BindView(R.id.etUsername)
     EditText etUsername;

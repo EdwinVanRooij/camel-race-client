@@ -1,4 +1,4 @@
-package io.github.edwinvanrooij.camelraceapp.ui;
+package io.github.edwinvanrooij.camelraceapp.ui.camelrace;
 
 
 import android.os.Bundle;
@@ -20,18 +20,14 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.github.edwinvanrooij.camelraceapp.R;
-import io.github.edwinvanrooij.camelraceshared.domain.Bid;
-import io.github.edwinvanrooij.camelraceshared.domain.CardType;
-
-import static io.github.edwinvanrooij.camelraceapp.R.id.default_activity_button;
-import static io.github.edwinvanrooij.camelraceapp.R.id.etBidValue;
-import static io.github.edwinvanrooij.camelraceapp.R.id.spinner;
+import io.github.edwinvanrooij.camelraceshared.domain.camelrace.Bid;
+import io.github.edwinvanrooij.camelraceshared.domain.camelrace.CardType;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BidFragment extends SocketFragment {
+public class BidFragmentCamelRace extends CamelRaceSocketFragment {
 
     @BindView(R.id.etBidValue)
     EditText etBidValue;

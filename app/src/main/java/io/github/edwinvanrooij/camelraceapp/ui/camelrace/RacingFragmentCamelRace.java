@@ -1,4 +1,4 @@
-package io.github.edwinvanrooij.camelraceapp.ui;
+package io.github.edwinvanrooij.camelraceapp.ui.camelrace;
 
 
 import android.os.Bundle;
@@ -7,20 +7,18 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 import io.github.edwinvanrooij.camelraceapp.R;
-import io.github.edwinvanrooij.camelraceshared.domain.Bid;
+import io.github.edwinvanrooij.camelraceshared.domain.camelrace.Bid;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RacingFragment extends SocketFragment {
+public class RacingFragmentCamelRace extends CamelRaceSocketFragment {
 
 //    @BindView(R.id.btnPlayAgain)
 //    Button btnPlayAgain;

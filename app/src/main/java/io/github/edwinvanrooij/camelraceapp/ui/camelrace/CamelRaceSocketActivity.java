@@ -1,8 +1,6 @@
-package io.github.edwinvanrooij.camelraceapp.ui;
+package io.github.edwinvanrooij.camelraceapp.ui.camelrace;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,25 +10,25 @@ import android.widget.Toast;
 
 import org.parceler.Parcels;
 
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.edwinvanrooij.camelraceapp.BuildConfig;
+import io.github.edwinvanrooij.camelraceapp.Config;
+import io.github.edwinvanrooij.camelraceapp.Const;
 import io.github.edwinvanrooij.camelraceapp.R;
 
-import io.github.edwinvanrooij.camelraceapp.Config;
 import io.github.edwinvanrooij.camelraceapp.Util;
-import io.github.edwinvanrooij.camelraceshared.domain.Bid;
 import io.github.edwinvanrooij.camelraceshared.domain.PersonalResultItem;
 import io.github.edwinvanrooij.camelraceshared.domain.PlayAgainRequest;
 import io.github.edwinvanrooij.camelraceshared.domain.Player;
 import io.github.edwinvanrooij.camelraceshared.domain.PlayerAliveCheck;
 import io.github.edwinvanrooij.camelraceshared.domain.PlayerJoinRequest;
-import io.github.edwinvanrooij.camelraceshared.domain.PlayerNewBid;
 import io.github.edwinvanrooij.camelraceshared.domain.PlayerNotReady;
+import io.github.edwinvanrooij.camelraceshared.domain.camelrace.Bid;
+import io.github.edwinvanrooij.camelraceshared.domain.camelrace.PlayerNewBid;
 import io.github.edwinvanrooij.camelraceshared.events.Event;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -39,10 +37,9 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 
-import static io.github.edwinvanrooij.camelraceapp.Config.CONNECTED_CHECKER_INTERVAL;
-import static io.github.edwinvanrooij.camelraceapp.Config.GAME_ID;
+import static io.github.edwinvanrooij.camelraceapp.Const.KEY_GAME_ID;
 
-public class SocketActivity extends AppCompatActivity {
+public class CamelRaceSocketActivity extends AppCompatActivity {
 
     @BindView(R.id.tvTitleConnect)
     TextView tvTitleConnect;
@@ -50,7 +47,6 @@ public class SocketActivity extends AppCompatActivity {
     private OkHttpClient client;
     private String gameId;
     private WebSocket ws;
-    private boolean connected = false;
     private Timer timer;
     private Player player;
 
@@ -66,43 +62,16 @@ public class SocketActivity extends AppCompatActivity {
 
         client = new OkHttpClient();
 
-        gameId = Parcels.unwrap(getIntent().getParcelableExtra(GAME_ID));
+        gameId = Parcels.unwrap(getIntent().getParcelableExtra(KEY_GAME_ID));
 
-        setFragment(EnterNameFragment.class, false);
+        setFragment(EnterNameFragmentCamelRace.class, false);
 
         connectWebSocket();
-//        startConnectedChecker();
     }
-
-//    private void startConnectedChecker() {
-//        final Handler h = new Handler();
-//        final int delay = CONNECTED_CHECKER_INTERVAL * 1000;
-//
-//        h.postDelayed(new Runnable() {
-//            public void run() {
-//                //do something
-//                if (!connected) {
-//                    System.out.println("Reconnecting");
-//                    reconnect();
-//                } else  {
-//                    System.out.println("Not reconnecting, connected is still true");
-//                }
-//
-//                h.postDelayed(this, delay);
-//            }
-//        }, delay);
-//    }
-
-//    private void reconnect() {
-//        connectWebSocket();
-//        if (player != null) {
-//            onSubmitUsername(player.getName());
-//        }
-//    }
 
     public void connectWebSocket() {
         try {
-            Request request = new Request.Builder().url(BuildConfig.BACKEND_CONNECTION_URL).build();
+            Request request = new Request.Builder().url(BuildConfig.BACKEND_BASE_CONNECTION_URL + Const.CAMEL_RACE_ENDPOINT_CLIENT).build();
             EchoWebSocketListener listener = new EchoWebSocketListener();
             ws = client.newWebSocket(request, listener);
         } catch (Exception e) {
@@ -133,28 +102,28 @@ public class SocketActivity extends AppCompatActivity {
     public void onSubmitUsername(String username) {
         Player player = new Player(username);
         PlayerJoinRequest playerJoinRequest = new PlayerJoinRequest(gameId, player);
-        sendMessage(Event.KEY_PLAYER_JOIN, playerJoinRequest, ws);
+        sendEvent(Event.KEY_PLAYER_JOIN, playerJoinRequest, ws);
     }
 
     public void onSubmitBid(Bid bid) {
         newBid = bid;
         PlayerNewBid playerNewBid = new PlayerNewBid(gameId, player, bid);
-        sendMessage(Event.KEY_PLAYER_NEW_BID, playerNewBid, ws);
+        sendEvent(Event.KEY_PLAYER_NEW_BID, playerNewBid, ws);
     }
 
     public void onPlayAgain() {
         PlayAgainRequest playAgainRequest = new PlayAgainRequest(gameId, player);
-        sendMessage(Event.KEY_PLAY_AGAIN, playAgainRequest, ws);
+        sendEvent(Event.KEY_PLAY_AGAIN, playAgainRequest, ws);
     }
 
     public void onNotReadyClick() {
-        sendMessage(Event.KEY_PLAYER_NOT_READY, new PlayerNotReady(gameId, player), ws);
+        sendEvent(Event.KEY_PLAYER_NOT_READY, new PlayerNotReady(gameId, player), ws);
     }
 
     public void onReady(Bid bid) {
         newBid = bid;
         PlayerNewBid playerNewBid = new PlayerNewBid(gameId, player, bid);
-        sendMessage(Event.KEY_PLAYER_READY, playerNewBid, ws);
+        sendEvent(Event.KEY_PLAYER_READY, playerNewBid, ws);
     }
 
     private final class EchoWebSocketListener extends WebSocketListener {
@@ -198,7 +167,6 @@ public class SocketActivity extends AppCompatActivity {
                     public void run() {
                         tvTitleConnect.setText(R.string.connected);
                         tvTitleConnect.setTextColor(getResources().getColor(R.color.green));
-                        connected = true;
                     }
                 }
         );
@@ -211,7 +179,6 @@ public class SocketActivity extends AppCompatActivity {
                     public void run() {
                         tvTitleConnect.setText(R.string.disconnected);
                         tvTitleConnect.setTextColor(getResources().getColor(R.color.red));
-                        connected = false;
                     }
                 }
         );
@@ -305,7 +272,7 @@ public class SocketActivity extends AppCompatActivity {
 
     private void onReadySuccess(boolean successful) {
         if (successful) {
-            setFragment(ReadyFragment.class, false);
+            setFragment(ReadyFragmentCamelRace.class, false);
             onHandedBid(true);
             runOnUiThread(new Runnable() {
                 @Override
@@ -325,7 +292,7 @@ public class SocketActivity extends AppCompatActivity {
 
     private void onNotReadySuccess(boolean successful) {
         if (successful) {
-            setFragment(BidFragment.class, false);
+            setFragment(BidFragmentCamelRace.class, false);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -353,7 +320,7 @@ public class SocketActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                setFragment(RacingFragment.class, false);
+                setFragment(RacingFragmentCamelRace.class, false);
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.game_started), Toast.LENGTH_SHORT).show();
             }
         });
@@ -373,14 +340,14 @@ public class SocketActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                setFragment(ResultFragment.class, false);
+                setFragment(ResultFragmentCamelRace.class, false);
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.game_ended), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void onPlayerJoinedSuccessfully() {
-        setFragment(BidFragment.class, false);
+        setFragment(BidFragmentCamelRace.class, false);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -396,13 +363,13 @@ public class SocketActivity extends AppCompatActivity {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                sendMessage(Event.KEY_PLAYER_ALIVE_CHECK, new PlayerAliveCheck(gameId, player), ws);
+                sendEvent(Event.KEY_PLAYER_ALIVE_CHECK, new PlayerAliveCheck(gameId, player), ws);
             }
         };
         timer.schedule(task, 0, interval * 1000);
     }
 
-    private void sendMessage(String eventType, Object value, WebSocket ws) {
+    private void sendEvent(String eventType, Object value, WebSocket ws) {
         Event event = new Event(eventType, value);
         String message = Util.objectToJson(event);
         ws.send(message);

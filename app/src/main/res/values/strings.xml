@@ -71,4 +71,5 @@
     <string name="title_default">Default title!</string>
     <string name="result_item_won">You won!</string>
     <string name="result_item_lost">You lost.</string>
+    <string name="waiting">Waiting...</string>
 </resources>
