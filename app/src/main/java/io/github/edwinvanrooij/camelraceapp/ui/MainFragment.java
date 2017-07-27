@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.parceler.Parcels;
 
 import butterknife.BindView;
@@ -20,6 +23,7 @@ import io.github.edwinvanrooij.camelraceapp.Const;
 import io.github.edwinvanrooij.camelraceapp.R;
 import io.github.edwinvanrooij.camelraceapp.Util;
 import io.github.edwinvanrooij.camelraceapp.ui.camelrace.CamelRaceSocketActivity;
+import io.github.edwinvanrooij.camelraceapp.ui.mexican.MexicanSocketActivity;
 import io.github.edwinvanrooij.camelraceshared.events.Event;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -79,7 +83,7 @@ public class MainFragment extends BaseFragment {
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             System.out.println("Receiving : " + text);
-            handleMessage(text, webSocket);
+            handleMessage(text);
         }
 
         @Override
@@ -109,26 +113,25 @@ public class MainFragment extends BaseFragment {
         System.out.println("Disconnected");
     }
 
-    public void handleMessage(String message, WebSocket socket) {
+    public void handleMessage(String message) {
         try {
-            Event event = Util.jsonToEvent(message);
+            JsonParser parser = new JsonParser();
+            JsonObject wholeJson = parser.parse(message).getAsJsonObject();
+            String event = wholeJson.get(Event.KEY_TYPE).getAsString();
 
-            switch (event.getEventType()) {
+            switch (event) {
                 case Event.KEY_GAME_TYPE: {
-//                    resultItem = (PersonalResultItem) event.getValue();
-                    String gameType = (String) event.getValue();
+                    String gameType = wholeJson.get(Event.KEY_VALUE).getAsString();
                     switch (gameType) {
                         case Const.KEY_GAME_TYPE_CAMEL_RACE:
                             startGame(CamelRaceSocketActivity.class);
                             break;
                         case Const.KEY_GAME_TYPE_MEXICAN:
-//                            startGame(CamelRaceSocketActivity.class);
-                            Toast.makeText(activity, "Starting mexican game!", Toast.LENGTH_SHORT).show();
+                            startGame(MexicanSocketActivity.class);
                             break;
                         default:
                             throw new Exception(String.format("Could not determine the correct game type from '%s'", gameType));
                     }
-//                    onGameEnded();
                     break;
                 }
             }

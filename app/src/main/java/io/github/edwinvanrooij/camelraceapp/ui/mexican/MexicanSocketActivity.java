@@ -1,4 +1,4 @@
-package io.github.edwinvanrooij.camelraceapp.ui.camelrace;
+package io.github.edwinvanrooij.camelraceapp.ui.mexican;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,13 +18,16 @@ import java.util.TimerTask;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.edwinvanrooij.camelraceapp.BuildConfig;
-import io.github.edwinvanrooij.camelraceapp.Config;
 import io.github.edwinvanrooij.camelraceapp.Const;
 import io.github.edwinvanrooij.camelraceapp.R;
-
 import io.github.edwinvanrooij.camelraceapp.Util;
 import io.github.edwinvanrooij.camelraceapp.ui.BaseGameActivity;
 import io.github.edwinvanrooij.camelraceapp.ui.BaseSocketActivity;
+import io.github.edwinvanrooij.camelraceapp.ui.camelrace.BidFragmentCamelRace;
+import io.github.edwinvanrooij.camelraceapp.ui.camelrace.EnterNameFragmentCamelRace;
+import io.github.edwinvanrooij.camelraceapp.ui.camelrace.RacingFragmentCamelRace;
+import io.github.edwinvanrooij.camelraceapp.ui.camelrace.ReadyFragmentCamelRace;
+import io.github.edwinvanrooij.camelraceapp.ui.camelrace.ResultFragmentCamelRace;
 import io.github.edwinvanrooij.camelraceshared.domain.PersonalResultItem;
 import io.github.edwinvanrooij.camelraceshared.domain.PlayAgainRequest;
 import io.github.edwinvanrooij.camelraceshared.domain.Player;
@@ -43,13 +46,10 @@ import okio.ByteString;
 
 import static io.github.edwinvanrooij.camelraceapp.Const.KEY_GAME_ID;
 
-public class CamelRaceSocketActivity extends BaseGameActivity {
+public class MexicanSocketActivity extends BaseGameActivity {
 
     @BindView(R.id.tvTitleConnect)
     TextView tvTitleConnect;
-    private Bid currentBid;
-    private Bid newBid;
-    private PersonalResultItem resultItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,20 +58,8 @@ public class CamelRaceSocketActivity extends BaseGameActivity {
         ButterKnife.bind(this);
 
         initVariables();
-        connectWebSocket(BuildConfig.BACKEND_BASE_CONNECTION_URL + Const.CAMEL_RACE_ENDPOINT_CLIENT);
-        setFragment(EnterNameFragmentCamelRace.class, false);
-    }
-
-    public void onSubmitBid(Bid bid) {
-        newBid = bid;
-        PlayerNewBid playerNewBid = new PlayerNewBid(gameId, player, bid);
-        sendEvent(Event.KEY_PLAYER_NEW_BID, playerNewBid, ws);
-    }
-
-    public void onReady(Bid bid) {
-        newBid = bid;
-        PlayerNewBid playerNewBid = new PlayerNewBid(gameId, player, bid);
-        sendEvent(Event.KEY_PLAYER_READY, playerNewBid, ws);
+        connectWebSocket(BuildConfig.BACKEND_BASE_CONNECTION_URL + Const.MEXICAN_ENDPOINT_CLIENT);
+        setFragment(EnterNameFragment.class, false);
     }
 
     private final class EchoWebSocketListener extends WebSocketListener {
@@ -108,7 +96,6 @@ public class CamelRaceSocketActivity extends BaseGameActivity {
         }
     }
 
-    @Override
     public void onConnected() {
         runOnUiThread(
                 new Runnable() {
@@ -121,7 +108,6 @@ public class CamelRaceSocketActivity extends BaseGameActivity {
         );
     }
 
-    @Override
     public void onDisconnected() {
         runOnUiThread(
                 new Runnable() {
@@ -142,44 +128,14 @@ public class CamelRaceSocketActivity extends BaseGameActivity {
         }
 
         switch (event) {
-            case Event.KEY_PLAYER_BID_HANDED_IN: {
-                Boolean succeeded = gson.fromJson(json.get(Event.KEY_VALUE), Boolean.class);
-                onHandedBid(succeeded);
-                return true;
-            }
-            case Event.KEY_PLAYER_READY_SUCCESS: {
-                Boolean succeeded = gson.fromJson(json.get(Event.KEY_VALUE), Boolean.class);
-                onHandedBid(succeeded);
-                onReadySuccess(succeeded);
-                return true;
-            }
-            case Event.KEY_GAME_OVER_PERSONAL_RESULTS: {
-                resultItem = gson.fromJson(json.get(Event.KEY_VALUE).getAsJsonObject().toString(), PersonalResultItem.class);
-                onGameEnded();
-                return true;
-            }
+//            case Event.KEY_PLAYER_BID_HANDED_IN: {
+//                Boolean succeeded = gson.fromJson(json.get(Event.KEY_VALUE), Boolean.class);
+//                onHandedBid(succeeded);
+//                return true;
+//            }
 
             default:
                 throw new Exception("Could not determine a correct event type for client message.");
-        }
-    }
-
-    private void onHandedBid(boolean successful) {
-        if (successful) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    currentBid = newBid;
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.successful_bid), Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.unsuccessful_bid), Toast.LENGTH_SHORT).show();
-                }
-            });
         }
     }
 
@@ -197,7 +153,6 @@ public class CamelRaceSocketActivity extends BaseGameActivity {
     private void onReadySuccess(boolean successful) {
         if (successful) {
             setFragment(ReadyFragmentCamelRace.class, false);
-            onHandedBid(true);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -232,15 +187,6 @@ public class CamelRaceSocketActivity extends BaseGameActivity {
             });
         }
     }
-
-    public Bid getBid() {
-        return currentBid;
-    }
-
-    public PersonalResultItem getResultItem() {
-        return resultItem;
-    }
-
     private void onGameStarted() {
         runOnUiThread(new Runnable() {
             @Override
@@ -301,4 +247,3 @@ public class CamelRaceSocketActivity extends BaseGameActivity {
         System.out.println(String.format("Sending: %s", message));
     }
 }
-

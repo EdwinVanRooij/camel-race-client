@@ -25,6 +25,10 @@
 
             android:screenOrientation="portrait"
             />
+        <activity android:name=".ui.mexican.MexicanSocketActivity"
+
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>
