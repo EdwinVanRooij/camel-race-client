@@ -1,15 +1,8 @@
 package io.github.edwinvanrooij.camelraceapp.ui;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import org.parceler.Parcels;
 
@@ -17,7 +10,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import io.github.edwinvanrooij.camelraceapp.R;
-import io.github.edwinvanrooij.camelraceapp.Util;
 import io.github.edwinvanrooij.camelraceapp.ui.camelrace.BidFragmentCamelRace;
 import io.github.edwinvanrooij.camelraceapp.ui.camelrace.RacingFragmentCamelRace;
 import io.github.edwinvanrooij.camelraceapp.ui.camelrace.ReadyFragmentCamelRace;
@@ -28,12 +20,6 @@ import io.github.edwinvanrooij.camelraceshared.domain.PlayerAliveCheck;
 import io.github.edwinvanrooij.camelraceshared.domain.PlayerJoinRequest;
 import io.github.edwinvanrooij.camelraceshared.domain.PlayerNotReady;
 import io.github.edwinvanrooij.camelraceshared.events.Event;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
-import okio.ByteString;
 
 import static io.github.edwinvanrooij.camelraceapp.Const.KEY_GAME_ID;
 
@@ -44,104 +30,32 @@ import static io.github.edwinvanrooij.camelraceapp.Const.KEY_GAME_ID;
 
 public abstract class BaseGameActivity extends BaseSocketActivity {
 
-    protected OkHttpClient client;
     protected String gameId;
-    protected WebSocket ws;
     protected Timer timer;
     protected Player player;
-    protected JsonParser parser;
-    protected Gson gson;
 
+    @Override
     protected void initVariables() {
+        super.initVariables();
+
         gameId = Parcels.unwrap(getIntent().getParcelableExtra(KEY_GAME_ID));
-        client = new OkHttpClient();
-        parser = new JsonParser();
-        gson = new Gson();
     }
-
-    public void connectWebSocket(String url) {
-        try {
-            Request request = new Request.Builder().url(url).build();
-            EchoWebSocketListener listener = new EchoWebSocketListener();
-            ws = client.newWebSocket(request, listener);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @SuppressWarnings("JavaDoc")
-    public void setFragment(Class fragmentClass, boolean addToStack) {
-        try {
-            Fragment fragment = (Fragment) fragmentClass.newInstance();
-            Bundle bundle = new Bundle();
-            fragment.setArguments(bundle);
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction ft = fragmentManager.beginTransaction();
-            // Add this transaction to the back stack
-            if (addToStack) {
-                ft.addToBackStack(null);
-            }
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.replace(R.id.flContent, fragment, fragmentClass.getSimpleName()).commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void onSubmitUsername(String username) {
         Player player = new Player(username);
         PlayerJoinRequest playerJoinRequest = new PlayerJoinRequest(gameId, player);
-        sendEvent(Event.KEY_PLAYER_JOIN, playerJoinRequest, ws);
+        sendEvent(Event.KEY_PLAYER_JOIN, playerJoinRequest);
     }
 
     public void onPlayAgain() {
         PlayAgainRequest playAgainRequest = new PlayAgainRequest(gameId, player);
-        sendEvent(Event.KEY_PLAY_AGAIN, playAgainRequest, ws);
+        sendEvent(Event.KEY_PLAY_AGAIN, playAgainRequest);
     }
 
     public void onNotReadyClick() {
-        sendEvent(Event.KEY_PLAYER_NOT_READY, new PlayerNotReady(gameId, player), ws);
+        sendEvent(Event.KEY_PLAYER_NOT_READY, new PlayerNotReady(gameId, player));
     }
 
-    private final class EchoWebSocketListener extends WebSocketListener {
-        private static final int NORMAL_CLOSURE_STATUS = 1000;
-
-        @Override
-        public void onOpen(WebSocket webSocket, Response response) {
-            System.out.println("Open connection on client.");
-            onConnected();
-        }
-
-        @Override
-        public void onMessage(WebSocket webSocket, String text) {
-            System.out.println("Receiving : " + text);
-            handleMessage(text, webSocket);
-        }
-
-        @Override
-        public void onMessage(WebSocket webSocket, ByteString bytes) {
-            System.out.println("Receiving bytes : " + bytes.hex());
-        }
-
-        @Override
-        public void onClosing(WebSocket webSocket, int code, String reason) {
-            webSocket.close(NORMAL_CLOSURE_STATUS, null);
-            System.out.println("Closing : " + code + " / " + reason);
-
-            onDisconnected();
-        }
-
-        @Override
-        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            System.out.println("Error : " + t.getMessage());
-        }
-    }
-
-    public abstract void onConnected();
-
-    public abstract void onDisconnected();
-
+    @Override
     protected boolean handleEvent(String event, JsonObject json) throws Exception {
         switch (event) {
             case Event.KEY_PLAYER_JOINED: {
@@ -176,17 +90,6 @@ public abstract class BaseGameActivity extends BaseSocketActivity {
 
             default:
                 return false;
-        }
-    }
-
-    public void handleMessage(String message, WebSocket socket) {
-        try {
-            JsonObject json = parser.parse(message).getAsJsonObject();
-            String event = json.get(Event.KEY_TYPE).getAsString();
-
-            handleEvent(event, json);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -253,8 +156,8 @@ public abstract class BaseGameActivity extends BaseSocketActivity {
     protected void onStop() {
         super.onStop();
 
-        System.out.println("Timer is now canceled");
         if (timer != null) {
+            System.out.println("Timer is now canceled");
             timer.cancel();
         }
     }
@@ -286,16 +189,9 @@ public abstract class BaseGameActivity extends BaseSocketActivity {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                sendEvent(Event.KEY_PLAYER_ALIVE_CHECK, new PlayerAliveCheck(gameId, player), ws);
+                sendEvent(Event.KEY_PLAYER_ALIVE_CHECK, new PlayerAliveCheck(gameId, player));
             }
         };
         timer.schedule(task, 0, interval * 1000);
-    }
-
-    private void sendEvent(String eventType, Object value, WebSocket ws) {
-        Event event = new Event(eventType, value);
-        String message = Util.objectToJson(event);
-        ws.send(message);
-        System.out.println(String.format("Sending: %s", message));
     }
 }

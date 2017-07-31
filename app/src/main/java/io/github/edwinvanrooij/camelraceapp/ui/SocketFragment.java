@@ -16,16 +16,16 @@ import butterknife.Unbinder;
  * Date: 21-1-17.
  */
 
-public abstract class BaseFragment extends Fragment {
+public abstract class SocketFragment extends Fragment {
 
     private Unbinder unbinder;
-    protected Activity activity;
+    protected BaseSocketActivity activity;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind(this, view);
-        activity = getActivity();
+        activity = (BaseSocketActivity) getActivity();
     }
 
     @Override

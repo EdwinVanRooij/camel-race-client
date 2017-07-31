@@ -47,6 +47,7 @@ public class CamelRaceSocketActivity extends BaseGameActivity {
 
     @BindView(R.id.tvTitleConnect)
     TextView tvTitleConnect;
+
     private Bid currentBid;
     private Bid newBid;
     private PersonalResultItem resultItem;
@@ -72,40 +73,6 @@ public class CamelRaceSocketActivity extends BaseGameActivity {
         newBid = bid;
         PlayerNewBid playerNewBid = new PlayerNewBid(gameId, player, bid);
         sendEvent(Event.KEY_PLAYER_READY, playerNewBid, ws);
-    }
-
-    private final class EchoWebSocketListener extends WebSocketListener {
-        private static final int NORMAL_CLOSURE_STATUS = 1000;
-
-        @Override
-        public void onOpen(WebSocket webSocket, Response response) {
-            System.out.println("Open connection on client.");
-            onConnected();
-        }
-
-        @Override
-        public void onMessage(WebSocket webSocket, String text) {
-            System.out.println("Receiving : " + text);
-            handleMessage(text, webSocket);
-        }
-
-        @Override
-        public void onMessage(WebSocket webSocket, ByteString bytes) {
-            System.out.println("Receiving bytes : " + bytes.hex());
-        }
-
-        @Override
-        public void onClosing(WebSocket webSocket, int code, String reason) {
-            webSocket.close(NORMAL_CLOSURE_STATUS, null);
-            System.out.println("Closing : " + code + " / " + reason);
-
-            onDisconnected();
-        }
-
-        @Override
-        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            System.out.println("Error : " + t.getMessage());
-        }
     }
 
     @Override
@@ -182,18 +149,6 @@ public class CamelRaceSocketActivity extends BaseGameActivity {
             });
         }
     }
-
-    private void onAliveConfirmed(boolean successful) {
-        if (!successful) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.alive_failed), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
     private void onReadySuccess(boolean successful) {
         if (successful) {
             setFragment(ReadyFragmentCamelRace.class, false);
@@ -251,16 +206,6 @@ public class CamelRaceSocketActivity extends BaseGameActivity {
         });
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        System.out.println("Timer is now canceled");
-        if (timer != null) {
-            timer.cancel();
-        }
-    }
-
     private void onGameEnded() {
         runOnUiThread(new Runnable() {
             @Override
@@ -269,36 +214,6 @@ public class CamelRaceSocketActivity extends BaseGameActivity {
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.game_ended), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void onPlayerJoinedSuccessfully() {
-        setFragment(BidFragmentCamelRace.class, false);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), getResources().getString(R.string.successful_join), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        if (timer != null) {
-            timer.cancel();
-        }
-        int interval = 2; // in seconds
-        timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                sendEvent(Event.KEY_PLAYER_ALIVE_CHECK, new PlayerAliveCheck(gameId, player), ws);
-            }
-        };
-        timer.schedule(task, 0, interval * 1000);
-    }
-
-    private void sendEvent(String eventType, Object value, WebSocket ws) {
-        Event event = new Event(eventType, value);
-        String message = Util.objectToJson(event);
-        ws.send(message);
-        System.out.println(String.format("Sending: %s", message));
     }
 }
 

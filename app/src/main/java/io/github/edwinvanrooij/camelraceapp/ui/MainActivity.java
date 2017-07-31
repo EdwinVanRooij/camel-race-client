@@ -10,12 +10,15 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.google.gson.JsonObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.edwinvanrooij.camelraceapp.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseSocketActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,17 +26,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        setFragment(MainFragment.class);
+        setFragment(MainFragment.class, false);
+    }
+    @Override
+    public void onConnected() {
+        Toast.makeText(this, "Ws connected", Toast.LENGTH_SHORT).show();
     }
 
-    private void setFragment(Class fragmentClass) {
-        try {
-            Fragment fragment = (Fragment) fragmentClass.newInstance();
+    @Override
+    public void onDisconnected() {
+        Toast.makeText(this, "Ws disconnected", Toast.LENGTH_SHORT).show();
+    }
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Override
+    protected boolean handleEvent(String event, JsonObject json) throws Exception {
+        return false;
     }
 }

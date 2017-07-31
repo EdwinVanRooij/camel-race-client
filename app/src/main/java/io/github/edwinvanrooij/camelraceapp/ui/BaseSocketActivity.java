@@ -134,7 +134,7 @@ public abstract class BaseSocketActivity extends AppCompatActivity {
 
     protected abstract boolean handleEvent(String event, JsonObject json) throws Exception;
 
-    public void handleMessage(String message, WebSocket socket) {
+    private void handleMessage(String message, WebSocket socket) {
         try {
             JsonObject json = parser.parse(message).getAsJsonObject();
             String event = json.get(Event.KEY_TYPE).getAsString();
@@ -145,7 +145,7 @@ public abstract class BaseSocketActivity extends AppCompatActivity {
         }
     }
 
-    private void sendEvent(String event, Object value, WebSocket ws) {
+    protected void sendEvent(String event, Object value) {
         Event e = new Event(event, value);
         String message = Util.objectToJson(e);
         ws.send(message);
