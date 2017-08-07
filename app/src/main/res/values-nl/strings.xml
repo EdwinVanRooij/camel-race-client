@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">CamelRaceApp</string>
     <string name="action_settings">Instellingen</string>
-    <string name="button_confirm">Bevestig</string>
+    <string name="button_confirm">OK</string>
     <string name="button_connect">Verbonden</string>
     <string name="button_join">Meedoen!</string>
     <string name="button_send">Sturen!</string>
@@ -40,4 +40,5 @@
     <string name="title_ready">Ik ben klaar!</string>
     <string name="unsuccessful_not_ready">Kon \'niet klaar\' verzoek niet sturen.</string>
     <string name="unsuccessful_ready">Kon \'klaar\' verzoek niet versturen.</string>
+    <string name="waiting">Wachtend...</string>
 </resources>

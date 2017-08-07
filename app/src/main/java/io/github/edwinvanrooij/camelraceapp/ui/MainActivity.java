@@ -16,7 +16,10 @@ import com.google.gson.JsonObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.github.edwinvanrooij.camelraceapp.BuildConfig;
+import io.github.edwinvanrooij.camelraceapp.Const;
 import io.github.edwinvanrooij.camelraceapp.R;
+import io.github.edwinvanrooij.camelraceshared.events.Event;
 
 public class MainActivity extends BaseSocketActivity {
 
@@ -26,8 +29,11 @@ public class MainActivity extends BaseSocketActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        initVariables();
+        connectWebSocket(BuildConfig.BACKEND_BASE_CONNECTION_URL + Const.DEFAULT_ENDPOINT_CLIENT);
         setFragment(MainFragment.class, false);
     }
+
     @Override
     public void onConnected() {
         Toast.makeText(this, "Ws connected", Toast.LENGTH_SHORT).show();
@@ -40,6 +46,33 @@ public class MainActivity extends BaseSocketActivity {
 
     @Override
     protected boolean handleEvent(String event, JsonObject json) throws Exception {
-        return false;
+        switch (event) {
+            case Event.KEY_GAME_TYPE: {
+                String gameType = json.get(Event.KEY_VALUE).getAsString();
+
+                switch (gameType) {
+                    case Const.KEY_GAME_TYPE_CAMEL_RACE:
+                        onCamelRaceGameType();
+                        break;
+                    case Const.KEY_GAME_TYPE_MEXICAN:
+                        onMexicanGameType();
+                        break;
+                    default:
+                        throw new Exception("Could not determine a correct game type.");
+                }
+                return true;
+            }
+
+            default:
+                throw new Exception("Could not determine a correct event type for client message.");
+        }
+    }
+
+    private void onMexicanGameType() {
+
+    }
+
+    private void onCamelRaceGameType() {
+
     }
 }

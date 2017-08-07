@@ -66,13 +66,13 @@ public class CamelRaceSocketActivity extends BaseGameActivity {
     public void onSubmitBid(Bid bid) {
         newBid = bid;
         PlayerNewBid playerNewBid = new PlayerNewBid(gameId, player, bid);
-        sendEvent(Event.KEY_PLAYER_NEW_BID, playerNewBid, ws);
+        sendEvent(Event.KEY_PLAYER_NEW_BID, playerNewBid);
     }
 
     public void onReady(Bid bid) {
         newBid = bid;
         PlayerNewBid playerNewBid = new PlayerNewBid(gameId, player, bid);
-        sendEvent(Event.KEY_PLAYER_READY, playerNewBid, ws);
+        sendEvent(Event.KEY_PLAYER_READY, playerNewBid);
     }
 
     @Override

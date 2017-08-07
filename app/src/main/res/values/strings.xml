@@ -26,7 +26,7 @@
     <string name="button_join">Join!</string>
     <string name="enter_name_title">Username</string>
     <string name="hint_username">My Name</string>
-    <string name="button_confirm">Confirm</string>
+    <string name="button_confirm">OK</string>
 
     <string name="wait_title" translatable="false">The game will start soon…</string>
     <string name="wait_description" translatable="false">Please wait while the host enters all of the required information.</string>

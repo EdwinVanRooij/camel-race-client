@@ -1,12 +1,8 @@
 package io.github.edwinvanrooij.camelraceapp.ui;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.View;
-import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -16,16 +12,16 @@ import butterknife.Unbinder;
  * Date: 21-1-17.
  */
 
-public abstract class SocketFragment extends Fragment {
+public abstract class BaseGameFragment extends BaseSocketFragment {
 
     private Unbinder unbinder;
-    protected BaseSocketActivity activity;
+    protected BaseGameActivity activity;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind(this, view);
-        activity = (BaseSocketActivity) getActivity();
+        activity = (BaseGameActivity) getActivity();
     }
 
     @Override

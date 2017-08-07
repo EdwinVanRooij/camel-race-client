@@ -40,6 +40,7 @@ public abstract class BaseGameActivity extends BaseSocketActivity {
 
         gameId = Parcels.unwrap(getIntent().getParcelableExtra(KEY_GAME_ID));
     }
+
     public void onSubmitUsername(String username) {
         Player player = new Player(username);
         PlayerJoinRequest playerJoinRequest = new PlayerJoinRequest(gameId, player);

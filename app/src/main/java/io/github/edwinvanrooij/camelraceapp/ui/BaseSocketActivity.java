@@ -100,31 +100,61 @@ public abstract class BaseSocketActivity extends AppCompatActivity {
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
             System.out.println("Open connection on client.");
-            onConnected();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onConnected();
+                }
+            });
         }
 
         @Override
-        public void onMessage(WebSocket webSocket, String text) {
-            System.out.println("Receiving : " + text);
-            handleMessage(text, webSocket);
+        public void onMessage(final WebSocket webSocket, final String text) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        System.out.println("Receiving : " + text);
+                        handleMessage(text, webSocket);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
 
         @Override
-        public void onMessage(WebSocket webSocket, ByteString bytes) {
-            System.out.println("Receiving bytes : " + bytes.hex());
+        public void onMessage(WebSocket webSocket, final ByteString bytes) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("Receiving bytes : " +
+                            bytes.hex());
+                }
+            });
         }
 
         @Override
-        public void onClosing(WebSocket webSocket, int code, String reason) {
-            webSocket.close(NORMAL_CLOSURE_STATUS, null);
-            System.out.println("Closing : " + code + " / " + reason);
+        public void onClosing(final WebSocket webSocket, final int code, final String reason) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    webSocket.close(NORMAL_CLOSURE_STATUS, null);
+                    System.out.println("Closing : " + code + " / " + reason);
 
-            onDisconnected();
+                    onDisconnected();
+                }
+            });
         }
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            System.out.println("Error : " + t.getMessage());
+            try {
+                System.out.println("Error : " + t.getMessage());
+                throw t;
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         }
     }
 
@@ -138,17 +168,23 @@ public abstract class BaseSocketActivity extends AppCompatActivity {
         try {
             JsonObject json = parser.parse(message).getAsJsonObject();
             String event = json.get(Event.KEY_TYPE).getAsString();
-
             handleEvent(event, json);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    protected void sendEvent(String event, Object value) {
-        Event e = new Event(event, value);
-        String message = Util.objectToJson(e);
-        ws.send(message);
-        System.out.println(String.format("Sending: %s", message));
+    protected void sendEvent(final String event, final Object value) {
+        runOnUiThread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        Event e = new Event(event, value);
+                        String message = Util.objectToJson(e);
+                        ws.send(message);
+                        System.out.println(String.format("Sending: %s", message));
+                    }
+                }
+        );
     }
 }

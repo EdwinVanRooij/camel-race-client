@@ -4,13 +4,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import io.github.edwinvanrooij.camelraceapp.ui.SocketFragment;
+import io.github.edwinvanrooij.camelraceapp.ui.BaseSocketFragment;
 
 /**
  * Created by eddy on 6/8/17.
  */
 
-public abstract class CamelRaceSocketFragment extends SocketFragment {
+public abstract class CamelRaceSocketFragment extends BaseSocketFragment {
 
     protected CamelRaceSocketActivity activity;
 

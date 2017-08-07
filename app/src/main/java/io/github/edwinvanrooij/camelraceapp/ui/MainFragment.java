@@ -22,7 +22,7 @@ import io.github.edwinvanrooij.camelraceshared.events.Event;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MainFragment extends SocketFragment {
+public class MainFragment extends BaseSocketFragment {
 
     @BindView(R.id.etGameId)
     EditText etGameId;
