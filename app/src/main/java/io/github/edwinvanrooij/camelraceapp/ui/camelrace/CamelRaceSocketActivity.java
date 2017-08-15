@@ -114,12 +114,6 @@ public class CamelRaceSocketActivity extends BaseGameActivity {
                 onHandedBid(succeeded);
                 return true;
             }
-            case Event.KEY_PLAYER_READY_SUCCESS: {
-                Boolean succeeded = gson.fromJson(json.get(Event.KEY_VALUE), Boolean.class);
-                onHandedBid(succeeded);
-                onReadySuccess(succeeded);
-                return true;
-            }
             case Event.KEY_GAME_OVER_PERSONAL_RESULTS: {
                 resultItem = gson.fromJson(json.get(Event.KEY_VALUE).getAsJsonObject().toString(), PersonalResultItem.class);
                 onGameEnded();
