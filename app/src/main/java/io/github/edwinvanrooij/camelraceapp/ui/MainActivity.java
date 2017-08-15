@@ -39,16 +39,18 @@ public class MainActivity extends BaseSocketActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        initVariables();
-        connectWebSocket(BuildConfig.BACKEND_BASE_CONNECTION_URL + Const.DEFAULT_ENDPOINT_CLIENT);
         setFragment(MainFragment.class, false);
+    }
+
+    @Override
+    protected void setWebSocketUrl() {
+        url = BuildConfig.BACKEND_BASE_CONNECTION_URL + Const.DEFAULT_ENDPOINT_CLIENT;
     }
 
     @Override
     public void onConnected() {
         Log.i(TAG, "onConnected: ws connected");
     }
-
     @Override
     public void onDisconnected() {
         Log.i(TAG, "onDisconnected: ws disconnected");

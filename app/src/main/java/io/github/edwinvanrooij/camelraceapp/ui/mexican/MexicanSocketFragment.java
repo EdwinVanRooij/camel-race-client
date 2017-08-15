@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import io.github.edwinvanrooij.camelraceapp.ui.BaseSocketFragment;
+import io.github.edwinvanrooij.camelraceapp.ui.camelrace.CamelRaceSocketActivity;
 
 /**
  * Created by eddy on 6/8/17.

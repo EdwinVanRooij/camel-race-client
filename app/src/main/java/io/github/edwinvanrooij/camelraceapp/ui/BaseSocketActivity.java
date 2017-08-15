@@ -1,41 +1,21 @@
 package io.github.edwinvanrooij.camelraceapp.ui;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.parceler.Parcels;
+import java.nio.channels.AlreadyConnectedException;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import io.github.edwinvanrooij.camelraceapp.BuildConfig;
-import io.github.edwinvanrooij.camelraceapp.Const;
 import io.github.edwinvanrooij.camelraceapp.R;
 import io.github.edwinvanrooij.camelraceapp.Util;
-import io.github.edwinvanrooij.camelraceapp.ui.camelrace.BidFragmentCamelRace;
-import io.github.edwinvanrooij.camelraceapp.ui.camelrace.EnterNameFragmentCamelRace;
-import io.github.edwinvanrooij.camelraceapp.ui.camelrace.RacingFragmentCamelRace;
-import io.github.edwinvanrooij.camelraceapp.ui.camelrace.ReadyFragmentCamelRace;
-import io.github.edwinvanrooij.camelraceapp.ui.camelrace.ResultFragmentCamelRace;
-import io.github.edwinvanrooij.camelraceshared.domain.PersonalResultItem;
-import io.github.edwinvanrooij.camelraceshared.domain.PlayAgainRequest;
-import io.github.edwinvanrooij.camelraceshared.domain.Player;
-import io.github.edwinvanrooij.camelraceshared.domain.PlayerAliveCheck;
-import io.github.edwinvanrooij.camelraceshared.domain.PlayerJoinRequest;
-import io.github.edwinvanrooij.camelraceshared.domain.PlayerNotReady;
-import io.github.edwinvanrooij.camelraceshared.domain.camelrace.Bid;
-import io.github.edwinvanrooij.camelraceshared.domain.camelrace.PlayerNewBid;
 import io.github.edwinvanrooij.camelraceshared.events.Event;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -43,8 +23,6 @@ import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
-
-import static io.github.edwinvanrooij.camelraceapp.Const.KEY_GAME_ID;
 
 /**
  * Author: eddy
@@ -57,14 +35,26 @@ public abstract class BaseSocketActivity extends AppCompatActivity {
     protected WebSocket ws;
     protected JsonParser parser;
     protected Gson gson;
+    protected String url;
 
-    protected void initVariables() {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setWebSocketUrl();
+        connectWebSocket();
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         client = new OkHttpClient();
         parser = new JsonParser();
         gson = new Gson();
     }
 
-    public void connectWebSocket(String url) {
+    protected abstract void setWebSocketUrl();
+
+    public void connectWebSocket() {
         try {
             Request request = new Request.Builder().url(url).build();
             EchoWebSocketListener listener = new EchoWebSocketListener();
@@ -158,9 +148,14 @@ public abstract class BaseSocketActivity extends AppCompatActivity {
         }
     }
 
-    public abstract void onConnected();
+    public void onConnected() {
+//        Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
+        System.out.println("Connected");
+    }
 
-    public abstract void onDisconnected();
+    public void onDisconnected(){
+        Toast.makeText(this, "Disconnected", Toast.LENGTH_SHORT).show();
+    }
 
     protected abstract boolean handleEvent(String event, JsonObject json) throws Exception;
 

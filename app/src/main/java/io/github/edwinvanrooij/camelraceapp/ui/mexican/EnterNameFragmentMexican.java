@@ -11,13 +11,12 @@ import android.widget.EditText;
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.github.edwinvanrooij.camelraceapp.R;
-import io.github.edwinvanrooij.camelraceapp.ui.camelrace.CamelRaceSocketFragment;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EnterNameFragment extends MexicanSocketFragment {
+public class EnterNameFragmentMexican extends MexicanSocketFragment {
 
     @BindView(R.id.etUsername)
     EditText etUsername;

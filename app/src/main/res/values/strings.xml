@@ -72,4 +72,5 @@
     <string name="result_item_won">You won!</string>
     <string name="result_item_lost">You lost.</string>
     <string name="waiting">Waiting...</string>
+    <string name="title_play_again_pending">I\'m ready to play again!</string>
 </resources>

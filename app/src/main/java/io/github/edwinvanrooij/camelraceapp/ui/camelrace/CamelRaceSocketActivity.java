@@ -59,33 +59,20 @@ public class CamelRaceSocketActivity extends BaseGameActivity {
         setContentView(R.layout.activity_socket);
         ButterKnife.bind(this);
 
-        initVariables();
-        connectWebSocket(BuildConfig.BACKEND_BASE_CONNECTION_URL + Const.CAMEL_RACE_ENDPOINT_CLIENT);
+        tvTitleConnect.setText(R.string.connected);
+        tvTitleConnect.setTextColor(getResources().getColor(R.color.green));
         setFragment(EnterNameFragmentCamelRace.class, false);
+    }
+
+    @Override
+    protected void setWebSocketUrl() {
+        url = BuildConfig.BACKEND_BASE_CONNECTION_URL + Const.CAMEL_RACE_ENDPOINT_CLIENT;
     }
 
     public void onSubmitBid(Bid bid) {
         newBid = bid;
         PlayerNewBid playerNewBid = new PlayerNewBid(gameId, player, bid);
         sendEvent(Event.KEY_PLAYER_NEW_BID, playerNewBid);
-    }
-
-    public void onReady() {
-        PlayerReady playerReady = new PlayerReady(gameId, player);
-        sendEvent(Event.KEY_PLAYER_READY, playerReady);
-    }
-
-    @Override
-    public void onConnected() {
-        runOnUiThread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        tvTitleConnect.setText(R.string.connected);
-                        tvTitleConnect.setTextColor(getResources().getColor(R.color.green));
-                    }
-                }
-        );
     }
 
     @Override
@@ -125,6 +112,66 @@ public class CamelRaceSocketActivity extends BaseGameActivity {
         }
     }
 
+    @Override
+    protected void onPlayAgainSuccessful() {
+        setFragment(PlayAgainPending.class, false);
+    }
+
+    @Override
+    protected void onReadySuccessful() {
+        setFragment(ReadyFragmentCamelRace.class, false);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.successful_ready), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    protected void onNotReadySuccessful() {
+        setFragment(BidFragmentCamelRace.class, false);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.successful_not_ready), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    protected void onGameStarted() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setFragment(RacingFragmentCamelRace.class, false);
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.game_started), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    protected void onGameEnded() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setFragment(ResultFragmentCamelRace.class, false);
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.game_ended), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    protected void onPlayerJoinedSuccessfully() {
+        setFragment(BidFragmentCamelRace.class, false);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.successful_join), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void onHandedBid(boolean successful) {
         if (successful) {
             runOnUiThread(new Runnable() {
@@ -143,44 +190,6 @@ public class CamelRaceSocketActivity extends BaseGameActivity {
             });
         }
     }
-    private void onReadySuccess(boolean successful) {
-        if (successful) {
-            setFragment(ReadyFragmentCamelRace.class, false);
-            onHandedBid(true);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.successful_ready), Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.unsuccessful_ready), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
-    private void onNotReadySuccess(boolean successful) {
-        if (successful) {
-            setFragment(BidFragmentCamelRace.class, false);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.successful_not_ready), Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.unsuccessful_not_ready), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
 
     public Bid getBid() {
         return currentBid;
@@ -188,26 +197,6 @@ public class CamelRaceSocketActivity extends BaseGameActivity {
 
     public PersonalResultItem getResultItem() {
         return resultItem;
-    }
-
-    private void onGameStarted() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                setFragment(RacingFragmentCamelRace.class, false);
-                Toast.makeText(getApplicationContext(), getResources().getString(R.string.game_started), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void onGameEnded() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                setFragment(ResultFragmentCamelRace.class, false);
-                Toast.makeText(getApplicationContext(), getResources().getString(R.string.game_ended), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }
 

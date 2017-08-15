@@ -1,4 +1,4 @@
-package io.github.edwinvanrooij.camelraceapp.ui.mexican;
+package io.github.edwinvanrooij.camelraceapp.ui.camelrace;
 
 
 import android.os.Bundle;
@@ -12,29 +12,20 @@ import android.widget.Button;
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.github.edwinvanrooij.camelraceapp.R;
-import io.github.edwinvanrooij.camelraceapp.ui.camelrace.CamelRaceSocketFragment;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ReadyFragment extends CamelRaceSocketFragment {
-
-    @BindView(R.id.btnNotReady)
-    Button btnNotReady;
+public class PlayAgainPending extends CamelRaceSocketFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_ready, container, false);
+        return inflater.inflate(R.layout.fragment_play_again_pending, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-    }
-
-    @OnClick(R.id.btnNotReady)
-    public void onBtnNotReadyClick() {
-        activity.onNotReadyClick();
     }
 }
