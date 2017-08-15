@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -23,6 +24,8 @@ import io.github.edwinvanrooij.camelraceshared.events.Event;
 
 public class MainActivity extends BaseSocketActivity {
 
+    private static final String TAG = "MainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,12 +39,12 @@ public class MainActivity extends BaseSocketActivity {
 
     @Override
     public void onConnected() {
-        Toast.makeText(this, "Ws connected", Toast.LENGTH_SHORT).show();
+        Log.i(TAG, "onConnected: ws connected");
     }
 
     @Override
     public void onDisconnected() {
-        Toast.makeText(this, "Ws disconnected", Toast.LENGTH_SHORT).show();
+        Log.i(TAG, "onDisconnected: ws disconnected");
     }
 
     @Override
@@ -69,10 +72,10 @@ public class MainActivity extends BaseSocketActivity {
     }
 
     private void onMexicanGameType() {
-
+        System.out.println("On mexican gametype");
     }
 
     private void onCamelRaceGameType() {
-
+        System.out.println("On camel gametype");
     }
 }
