@@ -31,6 +31,7 @@ import io.github.edwinvanrooij.camelraceshared.domain.Player;
 import io.github.edwinvanrooij.camelraceshared.domain.PlayerAliveCheck;
 import io.github.edwinvanrooij.camelraceshared.domain.PlayerJoinRequest;
 import io.github.edwinvanrooij.camelraceshared.domain.PlayerNotReady;
+import io.github.edwinvanrooij.camelraceshared.domain.PlayerReady;
 import io.github.edwinvanrooij.camelraceshared.domain.camelrace.Bid;
 import io.github.edwinvanrooij.camelraceshared.domain.camelrace.PlayerNewBid;
 import io.github.edwinvanrooij.camelraceshared.events.Event;
@@ -69,10 +70,9 @@ public class CamelRaceSocketActivity extends BaseGameActivity {
         sendEvent(Event.KEY_PLAYER_NEW_BID, playerNewBid);
     }
 
-    public void onReady(Bid bid) {
-        newBid = bid;
-        PlayerNewBid playerNewBid = new PlayerNewBid(gameId, player, bid);
-        sendEvent(Event.KEY_PLAYER_READY, playerNewBid);
+    public void onReady() {
+        PlayerReady playerReady = new PlayerReady(gameId, player);
+        sendEvent(Event.KEY_PLAYER_READY, playerReady);
     }
 
     @Override

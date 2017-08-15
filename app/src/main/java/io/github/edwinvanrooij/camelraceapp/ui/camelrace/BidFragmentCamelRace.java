@@ -83,14 +83,9 @@ public class BidFragmentCamelRace extends CamelRaceSocketFragment {
     }
 
     public void initSpinner() {
-        // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.spinner, android.R.layout.simple_spinner_item);
-
-        // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // Apply the mAdapter to the spinner
         spinner.setAdapter(adapter);
     }
 
@@ -106,7 +101,8 @@ public class BidFragmentCamelRace extends CamelRaceSocketFragment {
     public void onButtonReadyClick() {
         Bid bid = getBid();
         if (bid != null) {
-            activity.onReady(bid);
+            activity.onSubmitBid(bid);
+            activity.onReady();
         }
     }
 

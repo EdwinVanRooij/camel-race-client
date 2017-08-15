@@ -1,8 +1,10 @@
 package io.github.edwinvanrooij.camelraceapp.ui;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,25 +29,27 @@ public class MainFragment extends BaseSocketFragment {
     @BindView(R.id.etGameId)
     EditText etGameId;
 
-    private String gameId;
+    private MainActivity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_main, container, false);
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        activity = (MainActivity) getActivity();
+    }
+
     @OnClick(R.id.btnJoin)
     public void onButtonJoinClick() {
-        gameId = etGameId.getText().toString();
+        String gameId = etGameId.getText().toString();
+
         activity.sendEvent(Event.KEY_WHICH_GAME_TYPE, gameId);
+        activity.setGameId(gameId);
+
         Toast.makeText(activity, getResources().getString(R.string.waiting), Toast.LENGTH_SHORT).show();
     }
 
-    private void startGame(Class gameClass) {
-        Intent intent = new Intent(getActivity(), gameClass);
-
-        intent.putExtra(Const.KEY_GAME_ID, Parcels.wrap(gameId));
-
-        startActivity(intent);
-    }
 }
