@@ -88,17 +88,17 @@ public abstract class BaseGameActivity extends BaseSocketActivity {
         sendEvent(Event.KEY_PLAYER_JOIN, playerJoinRequest);
     }
 
-    public void onReady() {
-        PlayerReady playerReady = new PlayerReady(gameId, player);
-        sendEvent(Event.KEY_PLAYER_READY, playerReady);
-    }
-
     public void onPlayAgain() {
         PlayAgainRequest playAgainRequest = new PlayAgainRequest(gameId, player);
         sendEvent(Event.KEY_PLAY_AGAIN, playAgainRequest);
     }
 
-    public void onNotReadyClick() {
+    public void onReady() {
+        System.out.println("Sending ready event to server");
+        sendEvent(Event.KEY_PLAYER_READY, new PlayerReady(gameId, player));
+    }
+
+    public void onNotReady() {
         sendEvent(Event.KEY_PLAYER_NOT_READY, new PlayerNotReady(gameId, player));
     }
 

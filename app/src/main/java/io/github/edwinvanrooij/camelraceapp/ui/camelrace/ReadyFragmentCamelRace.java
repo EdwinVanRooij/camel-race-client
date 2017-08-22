@@ -34,6 +34,6 @@ public class ReadyFragmentCamelRace extends CamelRaceSocketFragment {
 
     @OnClick(R.id.btnNotReady)
     public void onBtnNotReadyClick() {
-        activity.onNotReadyClick();
+        activity.onNotReady();
     }
 }

@@ -21,6 +21,8 @@ import io.github.edwinvanrooij.camelraceapp.ui.camelrace.ResultFragmentCamelRace
 import io.github.edwinvanrooij.camelraceshared.domain.PersonalResultItem;
 import io.github.edwinvanrooij.camelraceshared.domain.camelrace.Bid;
 import io.github.edwinvanrooij.camelraceshared.domain.camelrace.PlayerNewBid;
+import io.github.edwinvanrooij.camelraceshared.domain.mexican.MexicanGame;
+import io.github.edwinvanrooij.camelraceshared.domain.mexican.PlayerGameModeVote;
 import io.github.edwinvanrooij.camelraceshared.events.Event;
 
 public class MexicanSocketActivity extends BaseGameActivity {
@@ -52,22 +54,34 @@ public class MexicanSocketActivity extends BaseGameActivity {
         }
 
         switch (event) {
-//            case Event.KEY_PLAYER_BID_HANDED_IN: {
-//                Boolean succeeded = gson.fromJson(json.get(Event.KEY_VALUE), Boolean.class);
-//                onHandedBid(succeeded);
-//                return true;
-//            }
-//            case Event.KEY_GAME_OVER_PERSONAL_RESULTS: {
-//                resultItem = gson.fromJson(json.get(Event.KEY_VALUE).getAsJsonObject().toString(), PersonalResultItem.class);
-//                onGameEnded();
-//                return true;
-//            }
+            case Event.KEY_PLAYER_GAME_MODE_VOTE_HANDED_IN: {
+                Boolean succeeded = gson.fromJson(json.get(Event.KEY_VALUE), Boolean.class);
+                onVoteHandedIn(succeeded);
+                return true;
+            }
 
             default:
                 throw new Exception("Could not determine a correct event type for client message.");
         }
     }
 
+    private void onVoteHandedIn(Boolean succeeded) {
+        if (succeeded) {
+            Toast.makeText(this, "Vote was successful", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Vote was unsuccessful", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void onVoteNormal() {
+        PlayerGameModeVote vote = new PlayerGameModeVote(gameId, player, MexicanGame.GameMode.NORMAL.ordinal());
+        sendEvent(Event.KEY_PLAYER_GAME_MODE_VOTE, vote);
+    }
+
+    public void onVoteHardcore() {
+        PlayerGameModeVote vote = new PlayerGameModeVote(gameId, player, MexicanGame.GameMode.HARDCORE.ordinal());
+        sendEvent(Event.KEY_PLAYER_GAME_MODE_VOTE, vote);
+    }
 
     @Override
     public void onDisconnected() {
@@ -84,17 +98,17 @@ public class MexicanSocketActivity extends BaseGameActivity {
 
     @Override
     protected void onReadySuccessful() {
-
+        Toast.makeText(this, "Ready now", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onNotReadySuccessful() {
-
+        Toast.makeText(this, "Not ready now", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onGameStarted() {
-
+        setFragment(GameModeVoteFragment.class, false);
     }
 
     @Override
@@ -104,7 +118,7 @@ public class MexicanSocketActivity extends BaseGameActivity {
 
     @Override
     protected void onPlayerJoinedSuccessfully() {
-        Toast.makeText(this, "Player joined successfully!", Toast.LENGTH_SHORT).show();
+        setFragment(ReadyFragmentMexican.class, false);
     }
 
     @Override

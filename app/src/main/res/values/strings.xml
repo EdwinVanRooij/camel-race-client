@@ -55,8 +55,9 @@
     <string name="navigation_drawer_subtitle" translatable="false">Beautiful subtitle</string>
     <string name="navigation_drawer_settings" translatable="false">Settings</string>
     <string name="empty_bid">Enter a positive bid.</string>
-    <string name="button_ready">Ready</string>
     <string name="title_ready">I\'m Ready!</string>
+    <string name="title_not_ready">I\'m not ready</string>
+    <string name="button_ready">Ready!</string>
     <string name="button_not_ready">Not Ready</string>
     <string name="successful_ready">Successfully sent ready.</string>
     <string name="unsuccessful_ready">Could not process ready request.</string>
@@ -73,4 +74,10 @@
     <string name="result_item_lost">You lost.</string>
     <string name="waiting">Waiting...</string>
     <string name="title_play_again_pending">I\'m ready to play again!</string>
+    <string name="title_or">or</string>
+    <string name="button_game_mode_hardcore">Hardcore!</string>
+    <string name="button_game_mode_normal">Normal</string>
+    <string name="placeholder_default">Default</string>
+    <string name="title_game_mode_normal">Normal</string>
+    <string name="title_game_mode_hardcore">Hardcore!</string>
 </resources>

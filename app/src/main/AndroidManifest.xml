@@ -21,14 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.camelrace.CamelRaceSocketActivity"
-
-            android:screenOrientation="portrait"
+        <activity android:name=".ui.camelrace.CamelRaceSocketActivity" android:screenOrientation="portrait"
             />
-        <activity android:name=".ui.mexican.MexicanSocketActivity"
-
-            android:screenOrientation="portrait"
-            />
+        <activity android:name=".ui.mexican.MexicanSocketActivity" android:screenOrientation="portrait" />
     </application>
 
 </manifest>
