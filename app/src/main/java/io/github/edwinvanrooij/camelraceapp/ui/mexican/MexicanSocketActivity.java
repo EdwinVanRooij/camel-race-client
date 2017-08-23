@@ -1,10 +1,12 @@
 package io.github.edwinvanrooij.camelraceapp.ui.mexican;
 
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
+import com.squareup.seismic.ShakeDetector;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -12,23 +14,18 @@ import io.github.edwinvanrooij.camelraceapp.BuildConfig;
 import io.github.edwinvanrooij.camelraceapp.Const;
 import io.github.edwinvanrooij.camelraceapp.R;
 import io.github.edwinvanrooij.camelraceapp.ui.BaseGameActivity;
-import io.github.edwinvanrooij.camelraceapp.ui.camelrace.BidFragmentCamelRace;
-import io.github.edwinvanrooij.camelraceapp.ui.camelrace.EnterNameFragmentCamelRace;
-import io.github.edwinvanrooij.camelraceapp.ui.camelrace.PlayAgainPending;
-import io.github.edwinvanrooij.camelraceapp.ui.camelrace.RacingFragmentCamelRace;
-import io.github.edwinvanrooij.camelraceapp.ui.camelrace.ReadyFragmentCamelRace;
-import io.github.edwinvanrooij.camelraceapp.ui.camelrace.ResultFragmentCamelRace;
-import io.github.edwinvanrooij.camelraceshared.domain.PersonalResultItem;
-import io.github.edwinvanrooij.camelraceshared.domain.camelrace.Bid;
-import io.github.edwinvanrooij.camelraceshared.domain.camelrace.PlayerNewBid;
 import io.github.edwinvanrooij.camelraceshared.domain.mexican.MexicanGame;
+import io.github.edwinvanrooij.camelraceshared.domain.mexican.NewPlayerThrow;
 import io.github.edwinvanrooij.camelraceshared.domain.mexican.PlayerGameModeVote;
 import io.github.edwinvanrooij.camelraceshared.events.Event;
 
-public class MexicanSocketActivity extends BaseGameActivity {
+public class MexicanSocketActivity extends BaseGameActivity implements ShakeDetector.Listener {
+
 
     @BindView(R.id.tvTitleConnect)
     TextView tvTitleConnect;
+
+    private boolean yourTurn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +36,10 @@ public class MexicanSocketActivity extends BaseGameActivity {
         tvTitleConnect.setText(R.string.connected);
         tvTitleConnect.setTextColor(getResources().getColor(R.color.green));
         setFragment(EnterNameFragmentMexican.class, false);
+
+        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        ShakeDetector sd = new ShakeDetector(this);
+        sd.start(sensorManager);
     }
 
     @Override
@@ -60,8 +61,34 @@ public class MexicanSocketActivity extends BaseGameActivity {
                 return true;
             }
 
+            case Event.KEY_EVERYONE_VOTED: {
+                onEveryoneVoted();
+                return true;
+            }
+
+            case Event.KEY_YOUR_TURN: {
+                onYourTurn();
+                return true;
+            }
+
             default:
                 throw new Exception("Could not determine a correct event type for client message.");
+        }
+    }
+
+    private void onYourTurn() {
+        TurnFragment turnFragment = (TurnFragment) getSupportFragmentManager().findFragmentByTag(TurnFragment.class.getSimpleName());
+        if (turnFragment != null && turnFragment.isVisible()) {
+            turnFragment.onYourTurn();
+            yourTurn = true;
+        }
+    }
+
+    private void onEndTurn() {
+        TurnFragment turnFragment = (TurnFragment) getSupportFragmentManager().findFragmentByTag(TurnFragment.class.getSimpleName());
+        if (turnFragment != null && turnFragment.isVisible()) {
+            turnFragment.onNotYourTurn();
+            yourTurn = false;
         }
     }
 
@@ -81,6 +108,11 @@ public class MexicanSocketActivity extends BaseGameActivity {
     public void onVoteHardcore() {
         PlayerGameModeVote vote = new PlayerGameModeVote(gameId, player, MexicanGame.GameMode.HARDCORE.ordinal());
         sendEvent(Event.KEY_PLAYER_GAME_MODE_VOTE, vote);
+    }
+
+    public void onEveryoneVoted() {
+        Toast.makeText(this, "Everyone voted", Toast.LENGTH_SHORT).show();
+        setFragment(TurnFragment.class, false);
     }
 
     @Override
@@ -124,6 +156,15 @@ public class MexicanSocketActivity extends BaseGameActivity {
     @Override
     protected void onPlayAgainSuccessful() {
 
+    }
+
+    @Override
+    public void hearShake() {
+        if (yourTurn) {
+            Toast.makeText(this, "Shakers gonna shake!", Toast.LENGTH_SHORT).show();
+            NewPlayerThrow newPlayerThrow = new NewPlayerThrow(gameId, player);
+            sendEvent(Event.KEY_NEW_THROW, newPlayerThrow);
+        }
     }
 }
 
