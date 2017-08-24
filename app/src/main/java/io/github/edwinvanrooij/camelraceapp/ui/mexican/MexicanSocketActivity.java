@@ -14,6 +14,7 @@ import io.github.edwinvanrooij.camelraceapp.BuildConfig;
 import io.github.edwinvanrooij.camelraceapp.Const;
 import io.github.edwinvanrooij.camelraceapp.R;
 import io.github.edwinvanrooij.camelraceapp.ui.BaseGameActivity;
+import io.github.edwinvanrooij.camelraceshared.domain.mexican.EndTurn;
 import io.github.edwinvanrooij.camelraceshared.domain.mexican.MexicanGame;
 import io.github.edwinvanrooij.camelraceshared.domain.mexican.NewPlayerThrow;
 import io.github.edwinvanrooij.camelraceshared.domain.mexican.PlayerGameModeVote;
@@ -71,8 +72,31 @@ public class MexicanSocketActivity extends BaseGameActivity implements ShakeDete
                 return true;
             }
 
+            case Event.KEY_PROMPT_THROW_OPTION: {
+                onYourTurnWithEndOption();
+                return true;
+            }
+
+            case Event.KEY_NEW_THROW_SUCCESS: {
+                Boolean succeeded = gson.fromJson(json.get(Event.KEY_VALUE), Boolean.class);
+                if (succeeded) {
+                    onThrown();
+                } else {
+                    Toast.makeText(this, "New throw did not succeed.", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+
             default:
                 throw new Exception("Could not determine a correct event type for client message.");
+        }
+    }
+
+    private void onYourTurnWithEndOption() {
+        TurnFragment turnFragment = (TurnFragment) getSupportFragmentManager().findFragmentByTag(TurnFragment.class.getSimpleName());
+        if (turnFragment != null && turnFragment.isVisible()) {
+            turnFragment.onYourTurnWithEndOption();
+            yourTurn = true;
         }
     }
 
@@ -84,11 +108,22 @@ public class MexicanSocketActivity extends BaseGameActivity implements ShakeDete
         }
     }
 
-    private void onEndTurn() {
+    private void onThrown() {
         TurnFragment turnFragment = (TurnFragment) getSupportFragmentManager().findFragmentByTag(TurnFragment.class.getSimpleName());
         if (turnFragment != null && turnFragment.isVisible()) {
             turnFragment.onNotYourTurn();
             yourTurn = false;
+        }
+    }
+
+    public void onEndTurn() {
+        TurnFragment turnFragment = (TurnFragment) getSupportFragmentManager().findFragmentByTag(TurnFragment.class.getSimpleName());
+        if (turnFragment != null && turnFragment.isVisible()) {
+            turnFragment.onNotYourTurn();
+            yourTurn = false;
+
+            EndTurn endTurn = new EndTurn(gameId, player.getId());
+            sendEvent(Event.KEY_END_TURN, endTurn);
         }
     }
 
@@ -161,10 +196,16 @@ public class MexicanSocketActivity extends BaseGameActivity implements ShakeDete
     @Override
     public void hearShake() {
         if (yourTurn) {
-            Toast.makeText(this, "Shakers gonna shake!", Toast.LENGTH_SHORT).show();
-            NewPlayerThrow newPlayerThrow = new NewPlayerThrow(gameId, player);
-            sendEvent(Event.KEY_NEW_THROW, newPlayerThrow);
+            throwDices();
+//            Toast.makeText(this, "Threw some dices by shaking", Toast.LENGTH_SHORT).show();
+        } else {
+//            Toast.makeText(this, "Not my turn", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void throwDices() {
+        NewPlayerThrow newPlayerThrow = new NewPlayerThrow(gameId, player);
+        sendEvent(Event.KEY_NEW_THROW, newPlayerThrow);
     }
 }
 

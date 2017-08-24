@@ -81,7 +81,9 @@
     <string name="title_game_mode_normal">Normal</string>
     <string name="title_game_mode_hardcore">Hardcore!</string>
     <string name="turn_description_my_turn">Your turn!</string>
-    <string name="turn_description_my_turn_help">shake your device</string>
+    <string name="turn_description_my_turn_help">(shake your device)</string>
     <string name="turn_description_not_my_turn">Waiting...</string>
-    <string name="turn_description_not_my_turn_help">(it\'s someone else\'s turn)</string>
+    <string name="turn_description_not_my_turn_help">(it may be someone else\'s turn)</string>
+    <string name="button_throw">Throw!</string>
+    <string name="button_stop">Stop</string>
 </resources>

@@ -8,8 +8,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -26,6 +28,10 @@ public class TurnFragment extends MexicanSocketFragment {
     TextView tvTurnHelp;
     @BindView(R.id.ivTurnIcon)
     ImageView ivTurnIcon;
+    @BindView(R.id.btnThrow)
+    Button btnThrow;
+    @BindView(R.id.btnStop)
+    Button btnStop;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,7 +41,6 @@ public class TurnFragment extends MexicanSocketFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
     }
 
     public void onYourTurn() {
@@ -43,6 +48,17 @@ public class TurnFragment extends MexicanSocketFragment {
         tvTurnDescription.setText(getResources().getString(R.string.turn_description_my_turn));
         tvTurnDescription.setTextColor(getResources().getColor(R.color.green));
         tvTurnHelp.setText(getResources().getString(R.string.turn_description_my_turn_help));
+        btnThrow.setVisibility(View.VISIBLE);
+        btnStop.setVisibility(View.GONE);
+    }
+
+    public void onYourTurnWithEndOption() {
+        ivTurnIcon.setImageDrawable(getResources().getDrawable(R.drawable.ready));
+        tvTurnDescription.setText(getResources().getString(R.string.turn_description_my_turn));
+        tvTurnDescription.setTextColor(getResources().getColor(R.color.green));
+        tvTurnHelp.setText(getResources().getString(R.string.turn_description_my_turn_help));
+        btnThrow.setVisibility(View.VISIBLE);
+        btnStop.setVisibility(View.VISIBLE);
     }
 
     public void onNotYourTurn() {
@@ -50,6 +66,19 @@ public class TurnFragment extends MexicanSocketFragment {
         tvTurnDescription.setText(getResources().getString(R.string.turn_description_not_my_turn));
         tvTurnDescription.setTextColor(Color.BLACK);
         tvTurnHelp.setText(getResources().getString(R.string.turn_description_not_my_turn_help));
+        btnThrow.setVisibility(View.GONE);
+        btnStop.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.btnThrow)
+    public void onThrowClick() {
+        activity.throwDices();
+        Toast.makeText(activity, "Threw by using button", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.btnStop)
+    public void onStopClick() {
+        activity.onEndTurn();
     }
 }
 
