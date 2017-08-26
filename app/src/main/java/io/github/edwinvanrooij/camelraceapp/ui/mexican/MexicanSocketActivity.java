@@ -203,7 +203,7 @@ public class MexicanSocketActivity extends BaseGameActivity implements ShakeDete
 
     @Override
     protected void onPlayAgainSuccessful() {
-
+        setFragment(PlayAgainPendingMexican.class, false);
     }
 
     @Override
