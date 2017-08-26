@@ -17,15 +17,16 @@ import io.github.edwinvanrooij.camelraceapp.ui.BaseGameActivity;
 import io.github.edwinvanrooij.camelraceshared.domain.mexican.EndTurn;
 import io.github.edwinvanrooij.camelraceshared.domain.mexican.MexicanGame;
 import io.github.edwinvanrooij.camelraceshared.domain.mexican.NewPlayerThrow;
+import io.github.edwinvanrooij.camelraceshared.domain.mexican.PersonalResultItemMexican;
 import io.github.edwinvanrooij.camelraceshared.domain.mexican.PlayerGameModeVote;
 import io.github.edwinvanrooij.camelraceshared.events.Event;
 
 public class MexicanSocketActivity extends BaseGameActivity implements ShakeDetector.Listener {
 
-
     @BindView(R.id.tvTitleConnect)
     TextView tvTitleConnect;
 
+    private PersonalResultItemMexican resultItem;
     private boolean yourTurn = false;
 
     @Override
@@ -84,6 +85,12 @@ public class MexicanSocketActivity extends BaseGameActivity implements ShakeDete
                 } else {
                     Toast.makeText(this, "New throw did not succeed.", Toast.LENGTH_SHORT).show();
                 }
+                return true;
+            }
+
+            case Event.KEY_GAME_OVER_PERSONAL_RESULTS: {
+                resultItem = gson.fromJson(json.get(Event.KEY_VALUE).getAsJsonObject().toString(), PersonalResultItemMexican.class);
+                onGameEnded();
                 return true;
             }
 
@@ -180,7 +187,13 @@ public class MexicanSocketActivity extends BaseGameActivity implements ShakeDete
 
     @Override
     protected void onGameEnded() {
-
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setFragment(ResultFragmentMexican.class, false);
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.game_ended), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -206,6 +219,10 @@ public class MexicanSocketActivity extends BaseGameActivity implements ShakeDete
     public void throwDices() {
         NewPlayerThrow newPlayerThrow = new NewPlayerThrow(gameId, player);
         sendEvent(Event.KEY_NEW_THROW, newPlayerThrow);
+    }
+
+    public PersonalResultItemMexican getResultItem() {
+        return resultItem;
     }
 }
 

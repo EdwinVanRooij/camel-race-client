@@ -12,8 +12,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.nio.channels.AlreadyConnectedException;
-
 import io.github.edwinvanrooij.camelraceapp.R;
 import io.github.edwinvanrooij.camelraceapp.Util;
 import io.github.edwinvanrooij.camelraceshared.events.Event;

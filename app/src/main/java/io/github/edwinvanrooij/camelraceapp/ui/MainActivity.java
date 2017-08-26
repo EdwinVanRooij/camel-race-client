@@ -2,30 +2,18 @@ package io.github.edwinvanrooij.camelraceapp.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
 import org.parceler.Parcels;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.edwinvanrooij.camelraceapp.BuildConfig;
 import io.github.edwinvanrooij.camelraceapp.Const;
 import io.github.edwinvanrooij.camelraceapp.R;
 import io.github.edwinvanrooij.camelraceapp.ui.camelrace.CamelRaceSocketActivity;
 import io.github.edwinvanrooij.camelraceapp.ui.mexican.MexicanSocketActivity;
-import io.github.edwinvanrooij.camelraceshared.domain.camelrace.CamelRaceGame;
 import io.github.edwinvanrooij.camelraceshared.events.Event;
 
 public class MainActivity extends BaseSocketActivity {

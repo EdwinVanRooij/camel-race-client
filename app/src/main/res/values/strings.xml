@@ -86,4 +86,6 @@
     <string name="turn_description_not_my_turn_help">(it may be someone else\'s turn)</string>
     <string name="button_throw">Throw!</string>
     <string name="button_stop">Stop</string>
+    <string name="result_item_someone_else_lost">Someone else lost!</string>
+    <string name="stake">Stake was %1$d</string>
 </resources>

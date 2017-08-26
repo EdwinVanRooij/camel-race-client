@@ -12,10 +12,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import io.github.edwinvanrooij.camelraceapp.R;
-import io.github.edwinvanrooij.camelraceapp.ui.camelrace.BidFragmentCamelRace;
-import io.github.edwinvanrooij.camelraceapp.ui.camelrace.RacingFragmentCamelRace;
-import io.github.edwinvanrooij.camelraceapp.ui.camelrace.ReadyFragmentCamelRace;
-import io.github.edwinvanrooij.camelraceapp.ui.camelrace.ResultFragmentCamelRace;
 import io.github.edwinvanrooij.camelraceshared.domain.PlayAgainRequest;
 import io.github.edwinvanrooij.camelraceshared.domain.Player;
 import io.github.edwinvanrooij.camelraceshared.domain.PlayerAliveCheck;
