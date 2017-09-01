@@ -28,6 +28,7 @@ public class MexicanSocketActivity extends BaseGameActivity implements ShakeDete
 
     private PersonalResultItemMexican resultItem;
     private boolean yourTurn = false;
+    private boolean waitingForServerResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,13 +116,6 @@ public class MexicanSocketActivity extends BaseGameActivity implements ShakeDete
         }
     }
 
-    private void onThrown() {
-        TurnFragment turnFragment = (TurnFragment) getSupportFragmentManager().findFragmentByTag(TurnFragment.class.getSimpleName());
-        if (turnFragment != null && turnFragment.isVisible()) {
-            turnFragment.onNotYourTurn();
-            yourTurn = false;
-        }
-    }
 
     public void onEndTurn() {
         TurnFragment turnFragment = (TurnFragment) getSupportFragmentManager().findFragmentByTag(TurnFragment.class.getSimpleName());
@@ -217,8 +211,20 @@ public class MexicanSocketActivity extends BaseGameActivity implements ShakeDete
     }
 
     public void throwDices() {
-        NewPlayerThrow newPlayerThrow = new NewPlayerThrow(gameId, player);
-        sendEvent(Event.KEY_NEW_THROW, newPlayerThrow);
+        if (!waitingForServerResponse) {
+            NewPlayerThrow newPlayerThrow = new NewPlayerThrow(gameId, player);
+            sendEvent(Event.KEY_NEW_THROW, newPlayerThrow);
+            waitingForServerResponse = true;
+        }
+    }
+
+    private void onThrown() {
+        waitingForServerResponse = false;
+        TurnFragment turnFragment = (TurnFragment) getSupportFragmentManager().findFragmentByTag(TurnFragment.class.getSimpleName());
+        if (turnFragment != null && turnFragment.isVisible()) {
+            turnFragment.onNotYourTurn();
+            yourTurn = false;
+        }
     }
 
     public PersonalResultItemMexican getResultItem() {
